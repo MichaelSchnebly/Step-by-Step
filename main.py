@@ -1,8 +1,8 @@
 import glfw
 import time
 from serial_communication import SerialReader
-from data_processing import LineData
-from opengl_rendering import LineRenderer, OpenGLApp
+from data_processing import LineData2D, LineData3D
+from opengl_rendering import LineRenderer2D, LineRenderer3D, OpenGLApp
 
 TITLE = "Realtime IMU Data"
 NUM_POINTS = 200
@@ -28,13 +28,13 @@ def main():
     # Initialize serial reader and line data
     serial_reader = SerialReader('/dev/cu.usbserial-028574DD', 1000000)
 
-    line_datas = [LineData(NUM_POINTS) for _ in range(6)]
-    line_renderers = [LineRenderer(NUM_POINTS) for _ in range(6)]
+    line_datas = [LineData2D(NUM_POINTS) for _ in range(6)]
+    line_renderers = [LineRenderer2D(NUM_POINTS) for _ in range(6)]
     
-    line_datas.append(LineData(2, dynamic_x=True))
-    line_renderers.append(LineRenderer(2))
-    
+    line_datas.append(LineData3D(2))
+    line_renderers.append(LineRenderer3D(2))
 
+    
     for renderer in line_renderers:
         opengl_app.add_line_renderer(renderer)
 
@@ -45,19 +45,17 @@ def main():
 
         while not serial_reader.data_queue.empty():
             data, fps = serial_reader.get_data()
-            # line_data.update(data.ox)
-            line_datas[0].update_y(data.ax)
-            line_datas[1].update_y(data.ay)
-            line_datas[2].update_y(data.az)
-            line_datas[3].update_y(data.gx)
-            line_datas[4].update_y(data.gy)
-            line_datas[5].update_y(data.gz)
-            line_datas[6].update_xy(data.oy, data.ox)
+            line_datas[0].update(data.ax)
+            line_datas[1].update(data.ay)
+            line_datas[2].update(data.az)
+            line_datas[3].update(data.gx)
+            line_datas[4].update(data.gy)
+            line_datas[5].update(data.gz)
+            line_datas[6].update(data.oy, data.ox, data.oz)
             if fps:
                 glfw.set_window_title(window, TITLE + "   ---   " + f"FPS: {fps:.2f}")
 
         if data:
-            # line_renderer.update_data(line_data.get_render_data())
             for i, line_data in enumerate(line_datas):
                 opengl_app.update_line_data(i, line_data.get_render_data())
             opengl_app.display()
