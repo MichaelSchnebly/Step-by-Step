@@ -40,8 +40,9 @@ class Data:
 
 
 # Serial port configuration
-SERIAL_PORT = '/dev/cu.usbmodem14601'  # Update this with your serial port
-BAUD_RATE = 115200              # Update this with your baud rate
+# SERIAL_PORT = '/dev/cu.usbmodem14601'  # Update this with your serial port
+SERIAL_PORT = '/dev/cu.usbserial-028574DD'
+BAUD_RATE = 1000000              # Update this with your baud rate
 
 ser = serial.Serial(SERIAL_PORT, BAUD_RATE)
 
