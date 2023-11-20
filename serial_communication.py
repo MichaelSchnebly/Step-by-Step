@@ -28,8 +28,8 @@ class SerialReader:
     def __init__(self, port, baud_rate):
         self.ser = serial.Serial(port, baud_rate)
         self.data_queue = queue.Queue()
-        # self.frame_count = 0
-        # self.last_time = time.time()
+        self.frame_count = 0
+        self.last_time = time.time()
         self.thread = threading.Thread(target=self.read_serial, daemon=True)
         self.thread.start()
 
@@ -43,18 +43,19 @@ class SerialReader:
 
     def get_data(self):
         if not self.data_queue.empty():
-            # self.frame_count += 1
-            # self._report_fps()
-            return Data.from_bytes(self.data_queue.get())
-        return None
+            self.frame_count += 1
+            return Data.from_bytes(self.data_queue.get()), self._report_fps()
+        return None, self._report_fps()
     
-    # def _report_fps(self):
-    #     current_time = time.time()
-    #     if current_time - self.last_time >= 1.0:  # Every second
-    #         fps = self.frame_count / (current_time - self.last_time)
-    #         print(f"FPS: {fps:.2f}")
-    #         self.last_time = current_time
-    #         self.frame_count = 0
+    def _report_fps(self):
+        current_time = time.time()
+        if current_time - self.last_time >= 1.0:  # Every second
+            fps = self.frame_count / (current_time - self.last_time)
+            # print(f"FPS: {fps:.2f}")
+            self.last_time = current_time
+            self.frame_count = 0
+            return fps
+        return None
     
     def close(self):
         self.ser.close()

@@ -4,15 +4,16 @@ from serial_communication import SerialReader
 from data_processing import LineData
 from opengl_rendering import LineRenderer, OpenGLApp
 
-# Constants
+TITLE = "Realtime IMU Data"
 NUM_POINTS = 200
+fps = 0
 
 
 def main():
     if not glfw.init():
         raise Exception("GLFW can't be initialized")
 
-    window = glfw.create_window(800, 600, "Realtime IMU Data", None, None)
+    window = glfw.create_window(800, 600, TITLE, None, None)
     if not window:
         glfw.terminate()
         raise Exception("GLFW window can't be created")
@@ -35,8 +36,10 @@ def main():
         glfw.poll_events()
 
         while not serial_reader.data_queue.empty():
-            data = serial_reader.get_data()
+            data, fps = serial_reader.get_data()
             line_data.update(data.ox)
+            if fps:
+                glfw.set_window_title(window, TITLE + "   ---   " + f"FPS: {fps:.2f}")
 
         if data:
             line_renderer.update_data(line_data.get_render_data())
