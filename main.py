@@ -9,12 +9,10 @@ from OpenGL.arrays import vbo
 import threading
 import queue
 
-# Serial port setup
-# SERIAL_PORT = '/dev/cu.usbmodem14601'  # Update this with your serial port
-SERIAL_PORT = '/dev/cu.usbserial-028574DD'
+
+SERIAL_PORT = '/dev/cu.usbserial-028574DD' #'/dev/cu.usbmodem14601'
 BAUD_RATE = 1000000  # Update this with your baud rate
 ser = serial.Serial(SERIAL_PORT, BAUD_RATE)
-
 data_queue = queue.Queue()
 
 def read_serial():
@@ -25,7 +23,6 @@ def read_serial():
         else:
             time.sleep(0.005)  # Small delay to prevent CPU overuse
 
-# Start the serial reading in a separate thread
 serial_thread = threading.Thread(target=read_serial, daemon=True)
 serial_thread.start()
 
@@ -47,31 +44,22 @@ class Data:
 
     @classmethod
     def from_bytes(self, data_bytes):
-        # Unpack the received bytes according to the data structure
         unpacked_data = struct.unpack('B11f', data_bytes)
         return self(*unpacked_data)
 
 
-# Initialize GLFW
 if not glfw.init():
     raise Exception("GLFW can't be initialized")
 
-# Create a GLFW window
 window = glfw.create_window(800, 600, "Oscillating Sine Wave with VBO", None, None)
 if not window:
     glfw.terminate()
     raise Exception("GLFW window can't be created")
 
 glfw.make_context_current(window)
-# glfw.swap_interval(1)  # Disable VSync
 
-
-# Number of points in the sine wave
-NUM_POINTS = 400
-
-# Initialize VBO with dummy data
+NUM_POINTS = 200
 sine_wave_vbo = vbo.VBO(np.zeros((NUM_POINTS, 2), dtype='f'))
-
 x = np.linspace(-1, 1, NUM_POINTS)
 y = np.zeros(NUM_POINTS)
 t = time.time()
@@ -83,7 +71,7 @@ def init_gl():
     glClearColor(0.0, 0.0, 0.0, 1.0)  # Set clear color
 
 
-def update_sine_wave(phase):
+def update_line():
     """ Update the sine wave points for the VBO """
     
     while not data_queue.empty():
@@ -115,13 +103,10 @@ def display():
 
 # Main loop
 init_gl()
-# frame_duration = 1 / 120  # Target frame duration for 100 FPS
 
 while not glfw.window_should_close(window):
-    # start_time = time.time()  # Get the start time of the frame
-
     glfw.poll_events()
-    update_sine_wave(time.time())  # Pass the current time as the phase
+    update_line()
     display()
 
     n += 1
@@ -129,12 +114,6 @@ while not glfw.window_should_close(window):
         print("Hz:", 100 / (time.time() - t))
         t = time.time()
         n = 0
-
-    # Calculate how long to sleep to maintain the target frame rate
-    # time_to_sleep = frame_duration - (time.time() - start_time)
-    # if time_to_sleep > 0:
-    #     time.sleep(time_to_sleep)
-
 
 
 ser.close()
