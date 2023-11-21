@@ -44,14 +44,14 @@ class SerialReader:
     def get_data(self):
         if not self.data_queue.empty():
             self.frame_count += 1
-            return Data.from_bytes(self.data_queue.get()), self._report_fps()
+            data = Data.from_bytes(self.data_queue.get())
+            return data, self._report_fps()
         return None, self._report_fps()
     
     def _report_fps(self):
         current_time = time.time()
         if current_time - self.last_time >= 1.0:  # Every second
             fps = self.frame_count / (current_time - self.last_time)
-            # print(f"FPS: {fps:.2f}")
             self.last_time = current_time
             self.frame_count = 0
             return fps
@@ -60,4 +60,3 @@ class SerialReader:
     def close(self):
         self.ser.close()
         print("Serial connection closed.")
-        return

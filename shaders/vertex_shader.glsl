@@ -1,4 +1,5 @@
 #version 120
+
 attribute vec3 position;
 varying float z;
 
