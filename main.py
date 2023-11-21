@@ -1,3 +1,4 @@
+import numpy as np
 import glfw
 import time
 from serial_communication import SerialReader
@@ -13,6 +14,10 @@ fps = 0
 def main():
     if not glfw.init():
         raise Exception("GLFW can't be initialized")
+    
+    # Set window's OpenGL version to 2.1
+    glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 2)
+    glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 1)
 
     window = glfw.create_window(800, 600, TITLE, None, None)
     if not window:
@@ -31,8 +36,8 @@ def main():
     line_datas = [LineData2D(NUM_POINTS) for _ in range(6)]
     line_renderers = [LineRenderer2D(NUM_POINTS) for _ in range(6)]
     
-    line_datas.append(LineData3D(2))
-    line_renderers.append(LineRenderer3D(2))
+    line_datas.append(LineData3D(NUM_POINTS))
+    line_renderers.append(LineRenderer3D(NUM_POINTS))
 
     
     for renderer in line_renderers:
@@ -51,7 +56,7 @@ def main():
             line_datas[3].update(data.gx)
             line_datas[4].update(data.gy)
             line_datas[5].update(data.gz)
-            line_datas[6].update(data.oy, data.ox, data.oz)
+            line_datas[6].update(np.array([data.oy, data.ox, data.oz]))
             if fps:
                 glfw.set_window_title(window, TITLE + "   ---   " + f"FPS: {fps:.2f}")
 

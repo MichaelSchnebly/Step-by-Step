@@ -2,6 +2,7 @@ import numpy as np
 from OpenGL.GL import *
 from OpenGL.arrays import vbo
 import glfw
+import glm
 
 
 def load_shader(shader_file, shader_type):
@@ -23,17 +24,17 @@ def load_shader(shader_file, shader_type):
 def create_shader_program(vertex_file_path, fragment_file_path):
     vertex_shader = load_shader(vertex_file_path, GL_VERTEX_SHADER)
     fragment_shader = load_shader(fragment_file_path, GL_FRAGMENT_SHADER)
-    shader_program = glCreateProgram()
-    glAttachShader(shader_program, vertex_shader)
-    glAttachShader(shader_program, fragment_shader)
-    glLinkProgram(shader_program)
-    return shader_program
+    shader = glCreateProgram()
+    glAttachShader(shader, vertex_shader)
+    glAttachShader(shader, fragment_shader)
+    glLinkProgram(shader)
+    return shader
 
 class LineRenderer2D:
     def __init__(self, num_points):
         self.num_points = num_points
         self.vbo = vbo.VBO(np.zeros((num_points, 2), dtype='f'))
-        glLineWidth(5.0)  # Set line width here or in a render method
+        glLineWidth(5.0)
 
     def update_data(self, data):
         self.vbo.set_array(data)
@@ -49,25 +50,18 @@ class LineRenderer2D:
 class LineRenderer3D:
     def __init__(self, num_points, vertex_shader_path = "vertex_shader.glsl", fragment_shader_path = "fragment_shader.glsl"):
         self.num_points = num_points
-        self.shader_program = create_shader_program(vertex_shader_path, fragment_shader_path)
+        self.shader = create_shader_program(vertex_shader_path, fragment_shader_path)
         self.vbo = vbo.VBO(np.zeros((num_points, 3), dtype='f'))
 
     def update_data(self, data):
-        # if data.shape != (self.num_points, 3):
-        #     # print(data)
-        #     raise ValueError("Data shape must be (num_points, 3)")
         self.vbo.set_array(data)
-        print(self.vbo.data)
 
     def render(self):
-        glUseProgram(self.shader_program)
+        glUseProgram(self.shader)
         self.vbo.bind()
-
         glEnableVertexAttribArray(0)
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, self.vbo)
-
-        glDrawArrays(GL_TRIANGLES, 0, self.num_points)
-
+        glDrawArrays(GL_POINTS, 0, self.num_points)
         glDisableVertexAttribArray(0)
         self.vbo.unbind()
         glUseProgram(0)
@@ -80,6 +74,11 @@ class OpenGLApp:
     def init_gl(self):
         """ Initialize OpenGL state """
         glClearColor(0.0, 0.0, 0.0, 1.0)  # Set clear color
+        glEnable(GL_PROGRAM_POINT_SIZE)
+        glEnable(GL_BLEND)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
+        
 
     def add_line_renderer(self, renderer):
         """ Add a line renderer to the app """
@@ -90,14 +89,14 @@ class OpenGLApp:
         glClear(GL_COLOR_BUFFER_BIT)
         for i in range(0,3):
             glPushMatrix()  # Save the current matrix
-            glTranslatef(-0.666, -1 + (i+0.5)*0.666, 0)  # Translate the line vertically
+            glTranslatef(-0.666, 1 - (i+0.5)*0.666, 0)  # Translate the line vertically
             glScalef(0.333, 0.333, 1.0)  # Apply vertical scaling
             self.line_renderers[i].render()
             glPopMatrix()  # Restore the matrix
 
         for i in range(3,6):
             glPushMatrix()  # Save the current matrix
-            glTranslatef(0.666, -1 + (i-3+0.5)*0.666, 0)  # Translate the line vertically
+            glTranslatef(0.666, 1 - (i-3+0.5)*0.666, 0)  # Translate the line vertically
             glScalef(0.333, 0.333, 1.0)  # Apply vertical scaling
             self.line_renderers[i].render()
             glPopMatrix()  # Restore the matrix

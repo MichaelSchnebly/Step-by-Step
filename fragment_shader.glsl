@@ -1,4 +1,5 @@
 #version 120
+varying float z;
 void main() {
-    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0); // Use 'gl_FragColor' for output
+    gl_FragColor = vec4(z, z, z, 1);  // Alpha based on depth
 }

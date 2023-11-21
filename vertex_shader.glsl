@@ -1,10 +1,17 @@
 #version 120
-attribute vec3 aPos; // Use 'attribute' instead of 'layout'
-
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
+attribute vec3 position;
+varying float z;
 
 void main() {
-    gl_Position = projection * view * model * vec4(aPos, 1.0);
+    float size;
+
+    gl_Position = vec4(position.x/3, position.y, position.z, 1.0);
+
+    z = position.z;
+    z = z + 1;
+    z = z / 2;
+
+    size = z * 20;
+
+    gl_PointSize = size;
 }
