@@ -26,7 +26,8 @@ def main():
     opengl_app.init_gl()
 
     # Initialize serial reader and line data
-    serial_reader = SerialReader('/dev/cu.usbserial-028574DD', 1000000)
+    # serial_reader = SerialReader('/dev/cu.usbserial-028574DD', 1000000)
+    serial_reader = SerialReader('/dev/cu.usbserial-0283D2D2', 1000000)
 
     line_datas = [LineData(NUM_POINTS) for _ in range(6)]
     line_renderers = [LineRenderer(NUM_POINTS) for _ in range(6)]
