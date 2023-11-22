@@ -36,7 +36,7 @@ class SerialReader:
     def read_serial(self):
         while True:
             if self.ser.in_waiting > 0:
-                data_bytes = self.ser.read(4 + 11 * 4)
+                data_bytes = self.ser.read(48)
                 self.data_queue.put(data_bytes)
             else:
                 time.sleep(0.005)

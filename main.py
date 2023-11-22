@@ -13,8 +13,8 @@ FPS = 0
 
 def init_window():
     """Initializes and returns a GLFW window."""
-    glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 2)
-    glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 1)
+    # glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 2)
+    # glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 1)
     window = glfw.create_window(800, 600, TITLE, None, None)
     if not window:
         glfw.terminate()
@@ -53,7 +53,7 @@ def main():
             line_datas[3].update(data.gx)
             line_datas[4].update(data.gy)
             line_datas[5].update(data.gz)
-            line_datas[6].update(np.array([data.oy, data.ox, data.oz]))
+            line_datas[6].update([data.oy, data.ox, data.oz])
             if FPS:
                 glfw.set_window_title(window, TITLE + "   ---   " + f"FPS: {FPS:.2f}")
 

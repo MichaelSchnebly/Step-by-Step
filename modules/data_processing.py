@@ -17,12 +17,12 @@ class LineData2D:
 class LineData3D:
     def __init__(self, num_points):
         self.num_points = num_points
-        self.values = np.zeros((num_points, 3), dtype='f')
+        self.values = np.zeros((num_points, 3), dtype=np.float32)
 
     def update(self, xyz):
-        p1 = np.array([0, 0, 0])
-        p2 = np.array(xyz)
-        self.values = np.linspace(p1, p2, self.num_points, endpoint=True)
+        p1 = np.array([0, 0, 0], dtype=np.float32)
+        p2 = np.array(xyz, dtype=np.float32)
+        self.values = np.linspace(p1, p2, self.num_points, endpoint=True, dtype=np.float32)
 
     def get_render_data(self):
         return self.values

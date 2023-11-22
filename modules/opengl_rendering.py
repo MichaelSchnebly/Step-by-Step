@@ -7,7 +7,7 @@ import glfw
 class LineRenderer2D:
     def __init__(self, num_points):
         self.num_points = num_points
-        self.vbo = vbo.VBO(np.zeros((num_points, 2), dtype='f'))
+        self.vbo = vbo.VBO(np.zeros((num_points, 2), dtype=np.dtype('float32')))
         glLineWidth(5.0)
 
     def update_data(self, data):
@@ -109,3 +109,28 @@ def create_shader_program(vertex_file_path, fragment_file_path):
     glAttachShader(shader, fragment_shader)
     glLinkProgram(shader)
     return shader
+
+
+def print_vbo_data(vbo, num_points, num_components):
+    """
+    Print the data from a VBO.
+
+    :param vbo: VBO object to read from.
+    :param num_points: Number of points in the VBO.
+    :param num_components: Number of components per point (e.g., 2 for 2D, 3 for 3D).
+    """
+    vbo.bind()
+    
+    # Calculate the size of the data in bytes
+    data_size = num_points * num_components * np.dtype('float32').itemsize
+
+    # Retrieve the data from the VBO
+    data = glGetBufferSubData(GL_ARRAY_BUFFER, 0, data_size)
+
+    # Convert to a NumPy array for easy viewing
+    data_array = np.frombuffer(data, dtype='f')
+    data_array = data_array.reshape(num_points, num_components)
+
+    vbo.unbind()
+
+    print(np.around(data_array[0], 2))
