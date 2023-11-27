@@ -1,25 +1,32 @@
-import glfw
 import time
-from serial_communication import SerialReader
-from data_processing import LineData
-from opengl_rendering import LineRenderer, OpenGLApp
+import numpy as np
+import glfw
 
+from modules.serial_communication import SerialReader
+from modules.data_processing import LineData2D, LineData3D
+from modules.opengl_rendering import LineRenderer2D, LineRenderer3D, OpenGLApp
+
+# Constants and Global Variables
 TITLE = "Realtime IMU Data"
 NUM_POINTS = 200
-# NUM_LINES = 6
-fps = 0
+FPS = 0
 
-
-def main():
-    if not glfw.init():
-        raise Exception("GLFW can't be initialized")
-
+def init_window():
+    """Initializes and returns a GLFW window."""
+    # glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 2)
+    # glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 1)
     window = glfw.create_window(800, 600, TITLE, None, None)
     if not window:
         glfw.terminate()
         raise Exception("GLFW window can't be created")
-
     glfw.make_context_current(window)
+    return window
+
+def main():
+    if not glfw.init():
+        raise Exception("GLFW can't be initialized")
+    
+    window = init_window()
 
     # Initialize OpenGL app
     opengl_app = OpenGLApp(window)
@@ -28,37 +35,30 @@ def main():
     # Initialize serial reader and line data
     # serial_reader = SerialReader('/dev/cu.usbserial-028574DD', 1000000)
     serial_reader = SerialReader('/dev/cu.usbserial-0283D2D2', 1000000)
-
-    line_datas = [LineData(NUM_POINTS) for _ in range(6)]
-    line_renderers = [LineRenderer(NUM_POINTS) for _ in range(6)]
     
-    line_datas.append(LineData(2, dynamic_x=True))
-    line_renderers.append(LineRenderer(2))
+    line_datas = [LineData2D(NUM_POINTS) for _ in range(6)] + [LineData3D(NUM_POINTS)]
+    line_renderers = [LineRenderer2D(NUM_POINTS) for _ in range(6)] + [LineRenderer3D(NUM_POINTS)]
     
-
     for renderer in line_renderers:
         opengl_app.add_line_renderer(renderer)
 
-
-    # Main loop
     while not glfw.window_should_close(window):
         glfw.poll_events()
 
+        data = None
         while not serial_reader.data_queue.empty():
-            data, fps = serial_reader.get_data()
-            # line_data.update(data.ox)
-            line_datas[0].update_y(data.ax)
-            line_datas[1].update_y(data.ay)
-            line_datas[2].update_y(data.az)
-            line_datas[3].update_y(data.gx)
-            line_datas[4].update_y(data.gy)
-            line_datas[5].update_y(data.gz)
-            line_datas[6].update_xy(data.oy, data.ox)
-            if fps:
-                glfw.set_window_title(window, TITLE + "   ---   " + f"FPS: {fps:.2f}")
+            data, FPS = serial_reader.get_data()
+            line_datas[0].update(data.ax)
+            line_datas[1].update(data.ay)
+            line_datas[2].update(data.az)
+            line_datas[3].update(data.gx)
+            line_datas[4].update(data.gy)
+            line_datas[5].update(data.gz)
+            line_datas[6].update([data.oy, data.ox, data.oz])
+            if FPS:
+                glfw.set_window_title(window, TITLE + "   ---   " + f"FPS: {FPS:.2f}")
 
         if data:
-            # line_renderer.update_data(line_data.get_render_data())
             for i, line_data in enumerate(line_datas):
                 opengl_app.update_line_data(i, line_data.get_render_data())
             opengl_app.display()
