@@ -13,8 +13,6 @@ FPS = 0
 
 def init_window():
     """Initializes and returns a GLFW window."""
-    # glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 2)
-    # glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 1)
     window = glfw.create_window(800, 600, TITLE, None, None)
     if not window:
         glfw.terminate()
@@ -27,15 +25,12 @@ def main():
         raise Exception("GLFW can't be initialized")
     
     window = init_window()
-
-    # Initialize OpenGL app
     opengl_app = OpenGLApp(window)
     opengl_app.init_gl()
 
-    # Initialize serial reader and line data
     # serial_reader = SerialReader('/dev/cu.usbserial-028574DD', 1000000)
     serial_reader = SerialReader('/dev/cu.usbserial-0283D2D2', 1000000)
-    
+
     line_datas = [LineData2D(NUM_POINTS) for _ in range(6)] + [LineData3D(NUM_POINTS)]
     line_renderers = [LineRenderer2D(NUM_POINTS) for _ in range(6)] + [LineRenderer3D(NUM_POINTS)]
     
