@@ -28,8 +28,8 @@ def main():
     opengl_app = OpenGLApp(window)
     opengl_app.init_gl()
 
-    # serial_reader = SerialReader('/dev/cu.usbserial-028574DD', 1000000)
-    serial_reader = SerialReader('/dev/cu.usbserial-0283D2D2', 1000000)
+    serial_reader = SerialReader('/dev/cu.usbserial-028574DD', 1000000)
+    # serial_reader = SerialReader('/dev/cu.usbserial-0283D2D2', 1000000)
 
     line_datas = [LineData2D(NUM_POINTS) for _ in range(6)] + [LineData3D(NUM_POINTS)]
     line_renderers = [LineRenderer2D(NUM_POINTS) for _ in range(6)] + [LineRenderer3D(NUM_POINTS)]
@@ -43,17 +43,19 @@ def main():
         data = None
         while not serial_reader.data_queue.empty():
             data, FPS = serial_reader.get_data()
-            line_datas[6].update([data.oy, data.ox, data.oz])
-            line_datas[0].update(data.ax)
-            line_datas[1].update(data.ay)
-            line_datas[2].update(data.az)
-            line_datas[3].update(data.gx)
-            line_datas[4].update(data.gy)
-            line_datas[5].update(data.gz)
+            line_datas[6].update(data[2])
+            # data[0] = line_datas[6].rotate(data[0])
+            line_datas[0].update(data[0, 0])
+            line_datas[1].update(data[0, 1])
+            line_datas[2].update(data[0, 2])
+            line_datas[3].update(data[1, 0])
+            line_datas[4].update(data[1, 1])
+            line_datas[5].update(data[1, 2])
+            
             if FPS:
                 glfw.set_window_title(window, TITLE + "   ---   " + f"FPS: {FPS:.2f}")
 
-        if data:
+        if data is not None:
             for i, line_data in enumerate(line_datas):
                 opengl_app.update_line_data(i, line_data.get_render_data())
             opengl_app.display()

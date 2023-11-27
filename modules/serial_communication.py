@@ -3,25 +3,26 @@ import struct
 import threading
 import queue
 import time
+import numpy as np
 
 class Data:
-    def __init__(self, channel, ax, ay, az, a, gx, gy, gz, g, ox, oy, oz):
-        self.channel = channel
+    def __init__(self, ax, ay, az, gx, gy, gz, ox, oy, oz): # channel, ax, ay, az, a, gx, gy, gz, g, ox, oy, oz
+        # self.channel = channel
         self.ax = ax
         self.ay = ay
         self.az = az
-        self.a = a
+        # self.a = a
         self.gx = gx
         self.gy = gy
         self.gz = gz
-        self.g = g
+        # self.g = g
         self.ox = ox
         self.oy = oy
         self.oz = oz
 
     @classmethod
     def from_bytes(self, data_bytes):
-        unpacked_data = struct.unpack('B11f', data_bytes)
+        unpacked_data = struct.unpack('9f', data_bytes)
         return self(*unpacked_data)
 
 class SerialReader:
@@ -36,7 +37,7 @@ class SerialReader:
     def read_serial(self):
         while True:
             if self.ser.in_waiting > 0:
-                data_bytes = self.ser.read(48)
+                data_bytes = self.ser.read(36)
                 self.data_queue.put(data_bytes)
             else:
                 time.sleep(0.005)
@@ -44,8 +45,9 @@ class SerialReader:
     def get_data(self):
         if not self.data_queue.empty():
             self.frame_count += 1
-            data = Data.from_bytes(self.data_queue.get())
-            return data, self._report_fps()
+            # data = Data.from_bytes(self.data_queue.get())
+            data = np.frombuffer(self.data_queue.get(), dtype=np.float32).reshape(3, 3)
+            return data.copy(), self._report_fps()
         return None, self._report_fps()
     
     def _report_fps(self):
