@@ -2,7 +2,7 @@ import time
 import numpy as np
 import glfw
 
-from modules.serial_communication import SerialReader
+from modules.data_stream import Stream
 from modules.data_processing import LineData2D, LineData3D
 from modules.opengl_rendering import LineRenderer2D, LineRenderer3D, OpenGLApp
 
@@ -28,8 +28,9 @@ def main():
     opengl_app = OpenGLApp(window)
     opengl_app.init_gl()
 
-    serial_reader = SerialReader('/dev/cu.usbserial-028574DD', 1000000)
-    # serial_reader = SerialReader('/dev/cu.usbserial-0283D2D2', 1000000)
+    stream = Stream('/dev/cu.usbserial-0283D2D2', 1000000, record=True, read_file=False)
+    # stream = SerialReader('/dev/cu.usbserial-028574DD', 1000000)
+    # stream = SerialReader('/dev/cu.usbserial-0283D2D2', 1000000)
 
     line_datas = [LineData2D(NUM_POINTS) for _ in range(6)] + [LineData3D(NUM_POINTS)]
     line_renderers = [LineRenderer2D(NUM_POINTS) for _ in range(6)] + [LineRenderer3D(NUM_POINTS)]
@@ -41,8 +42,8 @@ def main():
         glfw.poll_events()
 
         data = None
-        while not serial_reader.data_queue.empty():
-            data, FPS = serial_reader.get_data()
+        while not stream.data_queue.empty():
+            data, FPS = stream.get_data()
             line_datas[6].update(data[2])
             # data[0] = line_datas[6].rotate(data[0])
             line_datas[0].update(data[0, 0])
@@ -61,7 +62,7 @@ def main():
             opengl_app.display()
 
     # Clean up
-    serial_reader.close()  # Close serial port
+    stream.close()  # Close serial port
     glfw.terminate()  # Terminate GLFW
 
 if __name__ == "__main__":
