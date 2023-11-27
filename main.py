@@ -43,13 +43,13 @@ def main():
         data = None
         while not serial_reader.data_queue.empty():
             data, FPS = serial_reader.get_data()
+            line_datas[6].update([data.oy, data.ox, data.oz])
             line_datas[0].update(data.ax)
             line_datas[1].update(data.ay)
             line_datas[2].update(data.az)
             line_datas[3].update(data.gx)
             line_datas[4].update(data.gy)
             line_datas[5].update(data.gz)
-            line_datas[6].update([data.oy, data.ox, data.oz])
             if FPS:
                 glfw.set_window_title(window, TITLE + "   ---   " + f"FPS: {FPS:.2f}")
 
