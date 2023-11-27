@@ -28,7 +28,7 @@ def main():
     opengl_app = OpenGLApp(window)
     opengl_app.init_gl()
 
-    stream = Stream('/dev/cu.usbserial-0283D2D2', 1000000, record=True, read_file=False)
+    stream = Stream('/dev/cu.usbserial-0283D2D2', 1000000, record=False, read_file=False)
     # stream = SerialReader('/dev/cu.usbserial-028574DD', 1000000)
     # stream = SerialReader('/dev/cu.usbserial-0283D2D2', 1000000)
 
