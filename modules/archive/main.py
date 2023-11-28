@@ -6,12 +6,12 @@ import imgui
 from imgui.integrations.glfw import GlfwRenderer
 
 from modules.data_stream import Stream
-from modules.data_processing import PolylineData
-from modules.opengl_rendering import PolylineRenderer, OpenGLApp
+from modules.data_processing import LineData2D #, LineData3D
+from modules.opengl_rendering import LineRenderer2D, OpenGLApp #, LineRenderer3D
 
 # Constants and Global Variables
 TITLE = "Realtime IMU Data"
-NUM_POINTS = 500
+NUM_POINTS = 200
 FPS = 0
 
 def init_window():
@@ -21,10 +21,7 @@ def init_window():
     glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
     glfw.window_hint(glfw.OPENGL_FORWARD_COMPAT, GL.GL_TRUE)
 
-    monitor = glfw.get_primary_monitor()
-    mode = glfw.get_video_mode(monitor)
-    window = glfw.create_window(mode.size.width, mode.size.height, TITLE, None, None)
-
+    window = glfw.create_window(800, 800, TITLE, None, None)
     if not window:
         glfw.terminate()
         raise Exception("GLFW window can't be created")
@@ -54,13 +51,13 @@ def main():
     # stream = Stream('/dev/cu.usbserial-0283D2D2', 1000000, record=False, read_file=False)
     stream = Stream('/dev/cu.usbserial-028574DD', 1000000, record=False, read_file=False)
 
-    polylines = [PolylineData(NUM_POINTS, 0.002, np.array([0, 1, 1, 1]), [1, 1/3, 1], [0, 2/3, 0]),
-                 PolylineData(NUM_POINTS, 0.002, np.array([1, 0, 1, 1]), [1, 1/3, 1], [0, 0, 0]),
-                 PolylineData(NUM_POINTS, 0.002, np.array([1, 0.7, 0, 1]), [1, 1/3, 1], [0, -2/3, 0])]
-    
-    line_renderers = [PolylineRenderer(polylines)]
 
-    opengl_app.add_renderer(line_renderers[0])
+
+    line_datas = [LineData2D(NUM_POINTS) for _ in range(6)]# + [LineData3D(NUM_POINTS)] #[LineData3D(NUM_POINTS)]
+    line_renderers = [LineRenderer2D(NUM_POINTS) for _ in range(6)]# + [LineRenderer3D(NUM_POINTS)] #
+    
+    for renderer in line_renderers:
+        opengl_app.add_line_renderer(renderer)
 
     while not glfw.window_should_close(window):
         glfw.poll_events()
@@ -68,15 +65,21 @@ def main():
         data = None
         while not stream.data_queue.empty():
             data, FPS = stream.get_data()
-            polylines[0].update(data[0, 0])
-            polylines[1].update(data[0, 1])
-            polylines[2].update(data[0, 2])
+            line_datas[0].update(data[0, 0])
+            line_datas[1].update(data[0, 1])
+            line_datas[2].update(data[0, 2])
+            line_datas[3].update(data[1, 0])
+            line_datas[4].update(data[1, 1])
+            line_datas[5].update(data[1, 2])
+            #line_datas[6].update(data[2])
             
             if FPS:
                 glfw.set_window_title(window, TITLE + "   ---   " + f"FPS: {FPS:.2f}")
 
-        # if data is not None:
-        opengl_app.display()
+        if data is not None:
+            for i, line_data in enumerate(line_datas):
+                opengl_app.update_line_data(i, line_data.get_render_data())
+            opengl_app.display()
 
     # Clean up
     stream.close()  # Close serial port

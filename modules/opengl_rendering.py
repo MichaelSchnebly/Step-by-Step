@@ -1,88 +1,51 @@
 import numpy as np
 from OpenGL.GL import *
+from OpenGL.GL.shaders import compileProgram, compileShader
 from OpenGL.arrays import vbo
 import glfw
+import glm
 
 
-class LineRenderer2D:
-    def __init__(self, num_points):
-        self.num_points = num_points
-        self.vbo = vbo.VBO(np.zeros((num_points, 2), dtype=np.dtype('float32')))
-        glLineWidth(5.0)
 
-    def update_data(self, data):
-        self.vbo.set_array(data)
+class PolylineRenderer:
+    '''Renders polylines in 2D or 3D -- single shader used for all polylines
+    '''
+    def __init__(self, polylines):
+        self.polylines = polylines
 
-    def render(self):
-        self.vbo.bind()
-        glEnableClientState(GL_VERTEX_ARRAY)
-        glVertexPointer(2, GL_FLOAT, 0, self.vbo)
-        glDrawArrays(GL_LINE_STRIP, 0, self.num_points)
-        glDisableClientState(GL_VERTEX_ARRAY)
-        self.vbo.unbind()
+        self.vao = glGenVertexArrays(1)
+        glBindVertexArray(self.vao)
 
+        vertex_shader = load_shader("shaders/2D/polyline/vertex.glsl", GL_VERTEX_SHADER)
+        geometry_shader = load_shader("shaders/2D/polyline/geometry.glsl", GL_GEOMETRY_SHADER)
+        fragment_shader = load_shader("shaders/2D/polyline/fragment.glsl", GL_FRAGMENT_SHADER)
+        self.shader = compileProgram(vertex_shader, geometry_shader, fragment_shader)
 
-class LineRenderer3D:
-    def __init__(self, num_points, vertex_shader_path="shaders/vertex_shader.glsl", fragment_shader_path="shaders/fragment_shader.glsl"):
-        self.num_points = num_points
-        self.shader = create_shader_program(vertex_shader_path, fragment_shader_path)
-        self.vbo = vbo.VBO(np.zeros((num_points, 3), dtype='f'))
-
-    def update_data(self, data):
-        self.vbo.set_array(data)
-
-    def render(self):
         glUseProgram(self.shader)
-        self.vbo.bind()
-        glEnableVertexAttribArray(0)
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, self.vbo)
-        glDrawArrays(GL_POINTS, 0, self.num_points)
-        glDisableVertexAttribArray(0)
-        self.vbo.unbind()
+
+        self.transform_loc = glGetUniformLocation(self.shader, "transform")
+        self.width_loc = glGetUniformLocation(self.shader, "lineWidth")
+        self.color_loc = glGetUniformLocation(self.shader, "lineColor")
+
         glUseProgram(0)
+        glBindVertexArray(0)
 
+    def render(self):
+        for polyline in self.polylines:
+            glUseProgram(self.shader)
+            glBindVertexArray(self.vao)
 
-class OpenGLApp:
-    def __init__(self, window):
-        self.window = window
-        self.line_renderers = []
+            polyline.vbo.bind()
+            glEnableVertexAttribArray(0)
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, None)
 
-    def init_gl(self):
-        """ Initialize OpenGL state """
-        glClearColor(0.0, 0.0, 0.0, 1.0)  # Set clear color
-        glEnable(GL_PROGRAM_POINT_SIZE)
-        glEnable(GL_BLEND)
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+            glUniformMatrix4fv(self.transform_loc, 1, GL_FALSE, polyline.transform)
+            glUniform1f(self.width_loc, polyline.width)
+            glUniform4fv(self.color_loc, 1, polyline.color)
 
-    def add_line_renderer(self, renderer):
-        """ Add a line renderer to the app """
-        self.line_renderers.append(renderer)
+            glDrawArrays(GL_LINE_STRIP_ADJACENCY, 0, polyline.vertices.shape[0])
 
-    def display(self):
-        """ Display callback for GLFW """
-        glClear(GL_COLOR_BUFFER_BIT)
-        for i in range(0, 3):
-            glPushMatrix()
-            glTranslatef(-0.666, 1 - (i + 0.5) * 0.666, 0)
-            glScalef(0.333, 0.333, 1.0)
-            self.line_renderers[i].render()
-            glPopMatrix()
-
-        for i in range(3, 6):
-            glPushMatrix()
-            glTranslatef(0.666, 1 - (i - 3 + 0.5) * 0.666, 0)
-            glScalef(0.333, 0.333, 1.0)
-            self.line_renderers[i].render()
-            glPopMatrix()
-
-        self.line_renderers[6].render()
-        glfw.swap_buffers(self.window)
-
-    def update_line_data(self, line_index, data):
-        """ Update the data of a specific line renderer """
-        if line_index < len(self.line_renderers):
-            self.line_renderers[line_index].update_data(data)
-
+            polyline.vbo.unbind()
 
 def load_shader(shader_file, shader_type):
     with open(shader_file, 'r') as file:
@@ -100,37 +63,32 @@ def load_shader(shader_file, shader_type):
 
     return shader_ref
 
+class OpenGLApp:
+    def __init__(self, window):
+        self.window = window
+        self.renderers = []
 
-def create_shader_program(vertex_file_path, fragment_file_path):
-    vertex_shader = load_shader(vertex_file_path, GL_VERTEX_SHADER)
-    fragment_shader = load_shader(fragment_file_path, GL_FRAGMENT_SHADER)
-    shader = glCreateProgram()
-    glAttachShader(shader, vertex_shader)
-    glAttachShader(shader, fragment_shader)
-    glLinkProgram(shader)
-    return shader
+    def init_gl(self):
+        """ Initialize OpenGL state """
+        glClearColor(0.0, 0.0, 0.0, 1.0)  # Set clear color
+        glEnable(GL_PROGRAM_POINT_SIZE)
+        glEnable(GL_BLEND)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
+    def add_renderer(self, renderer):
+        """ Add a line renderer to the app """
+        self.renderers.append(renderer)
 
-def print_vbo_data(vbo, num_points, num_components):
-    """
-    Print the data from a VBO.
+    def display(self):
+        """ Display callback for GLFW """
+        glClear(GL_COLOR_BUFFER_BIT)
 
-    :param vbo: VBO object to read from.
-    :param num_points: Number of points in the VBO.
-    :param num_components: Number of components per point (e.g., 2 for 2D, 3 for 3D).
-    """
-    vbo.bind()
-    
-    # Calculate the size of the data in bytes
-    data_size = num_points * num_components * np.dtype('float32').itemsize
+        for renderer in self.renderers:
+            renderer.render()
 
-    # Retrieve the data from the VBO
-    data = glGetBufferSubData(GL_ARRAY_BUFFER, 0, data_size)
+        glfw.swap_buffers(self.window)
 
-    # Convert to a NumPy array for easy viewing
-    data_array = np.frombuffer(data, dtype='f')
-    data_array = data_array.reshape(num_points, num_components)
-
-    vbo.unbind()
-
-    print(np.around(data_array[0], 2))
+    # def update_line_data(self, line_index, data):
+    #     """ Update the data of a specific line renderer """
+    #     if line_index < len(self.line_renderers):
+    #         self.line_renderers[line_index].update_data(data)
