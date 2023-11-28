@@ -28,9 +28,8 @@ def main():
     opengl_app = OpenGLApp(window)
     opengl_app.init_gl()
 
-    stream = Stream('/dev/cu.usbserial-0283D2D2', 1000000, record=False, read_file=False)
-    # stream = SerialReader('/dev/cu.usbserial-028574DD', 1000000)
-    # stream = SerialReader('/dev/cu.usbserial-0283D2D2', 1000000)
+    stream = Stream('/dev/cu.usbserial-028574DD', 1000000, record=False, read_file=False)
+    # stream = Stream('/dev/cu.usbserial-0283D2D2', 1000000, record=False, read_file=False)
 
     line_datas = [LineData2D(NUM_POINTS) for _ in range(6)] + [LineData3D(NUM_POINTS)]
     line_renderers = [LineRenderer2D(NUM_POINTS) for _ in range(6)] + [LineRenderer3D(NUM_POINTS)]
