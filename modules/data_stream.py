@@ -51,12 +51,12 @@ class Stream:
                 self.data_queue.put(data_bytes)
                 time.sleep(0.01)
 
-    def get_data(self):
+    def get_frame(self):
         '''Returns the next data frame from the stream.'''
         if not self.data_queue.empty():
             self.frame_count += 1
-            data = np.frombuffer(self.data_queue.get(), dtype=np.float32).reshape(3, 3)
-            return data.copy(), self._report_fps()
+            frame = np.frombuffer(self.data_queue.get(), dtype=np.float32).reshape(3, 3)
+            return frame.copy(), self._report_fps()
         return None, self._report_fps()
     
     def _report_fps(self):
