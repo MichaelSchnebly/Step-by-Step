@@ -35,8 +35,7 @@ class PolylineData:
         self.transform = np.eye(4, dtype=np.float32)
         self.transform = np.dot(self.transform, scaling_matrix(scale[0], scale[1], scale[2]))
         self.transform = np.dot(self.transform, translation_matrix(translate[0], translate[1], translate[2]))
-        
-
+    
         self.vbo = vbo.VBO(self.vertices)
 
     def update(self, value):

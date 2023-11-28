@@ -4,6 +4,7 @@ from OpenGL.GL.shaders import compileProgram, compileShader
 from OpenGL.arrays import vbo
 import glfw
 import glm
+import imgui
 
 
 
@@ -62,33 +63,3 @@ def load_shader(shader_file, shader_type):
         return None
 
     return shader_ref
-
-class OpenGLApp:
-    def __init__(self, window):
-        self.window = window
-        self.renderers = []
-
-    def init_gl(self):
-        """ Initialize OpenGL state """
-        glClearColor(0.0, 0.0, 0.0, 1.0)  # Set clear color
-        glEnable(GL_PROGRAM_POINT_SIZE)
-        glEnable(GL_BLEND)
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-
-    def add_renderer(self, renderer):
-        """ Add a line renderer to the app """
-        self.renderers.append(renderer)
-
-    def display(self):
-        """ Display callback for GLFW """
-        glClear(GL_COLOR_BUFFER_BIT)
-
-        for renderer in self.renderers:
-            renderer.render()
-
-        glfw.swap_buffers(self.window)
-
-    # def update_line_data(self, line_index, data):
-    #     """ Update the data of a specific line renderer """
-    #     if line_index < len(self.line_renderers):
-    #         self.line_renderers[line_index].update_data(data)
