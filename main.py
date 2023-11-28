@@ -20,9 +20,10 @@ def init_window():
     glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
     glfw.window_hint(glfw.OPENGL_FORWARD_COMPAT, GL_TRUE)
 
-    monitor = glfw.get_primary_monitor()
-    mode = glfw.get_video_mode(monitor)
-    window = glfw.create_window(mode.size.width, mode.size.height, TITLE, None, None)
+    # monitor = glfw.get_primary_monitor()
+    # mode = glfw.get_video_mode(monitor)
+    # window = glfw.create_window(mode.size.width, mode.size.height, TITLE, None, None)
+    window = glfw.create_window(720, 720, TITLE, None, None)
 
     if not window:
         glfw.terminate()
@@ -45,6 +46,7 @@ def init_ui(window):
     impl = GlfwRenderer(window)
     return impl
 
+
 def update_ui(impl):
     """Updates the ImGUI renderer."""
     impl.process_inputs()
@@ -58,6 +60,7 @@ def update_ui(impl):
     imgui.render()
     impl.render(imgui.get_draw_data())
 
+
 def update_data(stream, data, window):
     new_frame = False
     while not stream.data_queue.empty():
@@ -70,6 +73,7 @@ def update_data(stream, data, window):
             glfw.set_window_title(window, TITLE + "   ---   " + f"FPS: {FPS:.2f}")
 
     return new_frame
+
 
 def update_data_display(renderers):
     for renderer in renderers:
@@ -91,7 +95,6 @@ def main():
             PolylineData(NUM_POINTS, 0.002, np.array([1, 1, 1, 1]), [1, 1/3, 1], [0, -2/3, 0])]
     
     renderers = [PolylineRenderer(data)]
-
 
     while not glfw.window_should_close(window):
         glfw.poll_events()
