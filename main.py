@@ -7,11 +7,11 @@ from imgui.integrations.glfw import GlfwRenderer
 from modules.data_stream import Stream
 from modules.data_processing import PolylineData
 from modules.data_rendering import PolylineRenderer
-from modules.metronome import Metronome, MetronomeOutput
+from modules.metronome import Metronome
 
 # Constants and Global Variables
 TITLE = "Realtime IMU Data"
-NUM_POINTS = 500
+NUM_POINTS = 4
 FPS = 0
 
 def init_window():
