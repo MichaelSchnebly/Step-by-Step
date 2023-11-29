@@ -7,6 +7,7 @@ from imgui.integrations.glfw import GlfwRenderer
 from modules.data_stream import Stream
 from modules.data_processing import PolylineData
 from modules.data_rendering import PolylineRenderer
+from modules.metronome import Metronome, MetronomeOutput
 
 # Constants and Global Variables
 TITLE = "Realtime IMU Data"
@@ -62,23 +63,22 @@ def update_ui(impl):
 
 
 def update_data(stream, data, window):
-    new_frame = False
+    new_frames = 0
     while not stream.data_queue.empty():
-        new_frame = True
+        new_frames += 1
         frame, FPS = stream.get_frame()
         data[0].update(frame[0, 0])
         data[1].update(frame[0, 1])
-        data[2].update(frame[0, 2])
+        data[2].update(frame[0, 2]) 
         if FPS:
             glfw.set_window_title(window, TITLE + "   ---   " + f"FPS: {FPS:.2f}")
 
-    return new_frame
+    return new_frames
 
 
 def update_data_display(renderers):
     for renderer in renderers:
             renderer.render()
-
 
 def main():
     if not glfw.init():
@@ -96,11 +96,13 @@ def main():
     
     renderers = [PolylineRenderer(data)]
 
+    metronome = Metronome(120)
+
     while not glfw.window_should_close(window):
         glfw.poll_events()
         glClear(GL_COLOR_BUFFER_BIT)
         update_ui(impl)
-        update_data(stream, data, window)
+        update_data(stream, data, window, metronome)
         update_data_display(renderers)
         glfw.swap_buffers(window)
 
