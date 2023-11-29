@@ -102,7 +102,7 @@ def main():
         glfw.poll_events()
         glClear(GL_COLOR_BUFFER_BIT)
         update_ui(impl)
-        update_data(stream, data, window, metronome)
+        update_data(stream, data, window)
         update_data_display(renderers)
         glfw.swap_buffers(window)
 
