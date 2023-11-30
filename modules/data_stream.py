@@ -4,6 +4,7 @@ import time
 import serial
 import numpy as np
 
+
 class Stream:
     '''A class to represent a stream of data.
         -The stream is a queue of sensor values.

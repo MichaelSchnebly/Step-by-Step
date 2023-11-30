@@ -4,9 +4,7 @@ layout(triangle_strip, max_vertices = 10) out;
 
 uniform float lineWidth;
 
-vec2 miterJoin(vec2 p0, vec2 p1, vec2 p2, float lineWidth, out float miterLength) {
-    
-                                        
+vec2 miterJoin(vec2 p0, vec2 p1, vec2 p2, float lineWidth, out float miterLength) {                     
     // Direction of the two segments
     vec2 dir1 = normalize(p1 - p0);
     vec2 dir2 = normalize(p2 - p1);

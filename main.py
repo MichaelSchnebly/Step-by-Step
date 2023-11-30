@@ -11,7 +11,7 @@ from modules.metronome import Metronome
 
 # Constants and Global Variables
 TITLE = "Realtime IMU Data"
-NUM_POINTS = 4
+NUM_POINTS = 1000
 FPS = 0
 
 def init_window():
@@ -90,9 +90,11 @@ def main():
     # stream = Stream('/dev/cu.usbserial-0283D2D2', 1000000, record=False, read_file=False)
     stream = Stream('/dev/cu.usbserial-028574DD', 1000000, record=False, read_file=False)
 
-    data = [PolylineData(NUM_POINTS, 0.002, np.array([1, 1, 1, 1]), [1, 1/3, 1], [0, 2/3, 0]),
-            PolylineData(NUM_POINTS, 0.002, np.array([1, 1, 1, 1]), [1, 1/3, 1], [0, 0, 0]),
-            PolylineData(NUM_POINTS, 0.002, np.array([1, 1, 1, 1]), [1, 1/3, 1], [0, -2/3, 0])]
+    data = [PolylineData(NUM_POINTS, 0.002, np.array([1, 1, 1, 1]), [1, 1/3, 1], [0, 2/3, 0]),      #acceleration.x
+            PolylineData(NUM_POINTS, 0.002, np.array([1, 1, 1, 1]), [1, 1/3, 1], [0, 0, 0]),        #acceleration.y
+            PolylineData(NUM_POINTS, 0.002, np.array([1, 1, 1, 1]), [1, 1/3, 1], [0, -2/3, 0]),     #acceleration.z
+            PolylineData(NUM_POINTS, 0.002, np.array([1, 1, 1, 1]), [1, 1, 1], [0, 0, 0])           #acceleration.mag
+            ]
     
     renderers = [PolylineRenderer(data)]
 

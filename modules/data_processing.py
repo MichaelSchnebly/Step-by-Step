@@ -1,3 +1,4 @@
+import math
 import numpy as np
 import glm
 from scipy.spatial.transform import Rotation as R
@@ -22,7 +23,6 @@ def scaling_matrix(sx, sy, sz):
     ], dtype=np.float32)
 
 
-
 class PolylineData:
     def __init__(self, num_points, width = 0.002, color = np.ones(4, dtype=np.float32), scale = [1, 1, 1], translate = [0, 0, 0]):
         self.vertices = np.zeros((num_points, 3), dtype=np.float32)
@@ -44,7 +44,7 @@ class PolylineData:
         self.vbo.set_array(self.vertices)
 
 
-class LineData2D:
+class LineData:
     def __init__(self, num_points):
         self.values = np.zeros((num_points, 2), dtype=np.float32)
         self.values[:, 0] = np.linspace(-1, 1, num_points)
@@ -56,29 +56,3 @@ class LineData2D:
 
     def get_render_data(self):
         return self.values
-    
-
-class LineData3D:
-    def __init__(self, num_points):
-        self.num_points = num_points
-        self.values = np.zeros((num_points, 3), dtype=np.float32)
-        self.rotation = R.from_quat([0, 0, 0, 1]) #np.eye(3)
-
-    def update(self, xyz):
-        # self.rotation, _ = R.align_vectors([[0, 0, 1]], [xyz])
-        # xyz = self.rotate(xyz)
-
-        p1 = np.array([0, 0, 0], dtype=np.float32)
-        p2 = np.array([xyz[1], xyz[0], xyz[2]], dtype=np.float32)
-        self.values = np.linspace(p1, p2, self.num_points, endpoint=True, dtype=np.float32)
-        self.values[:,:2] *= -0.1
-        self.values[:,:2] += 0.9
-
-    def rotate(self, vector):
-        return self.rotation.apply(vector)
-
-    def get_render_data(self):
-        return self.values
-    
-
-    
