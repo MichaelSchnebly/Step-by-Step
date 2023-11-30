@@ -1,6 +1,4 @@
 import numpy as np
-from scipy.spatial.transform import Rotation as R
-from OpenGL.arrays import vbo
 
 class IMUData:
     '''A class to represent IMU data.

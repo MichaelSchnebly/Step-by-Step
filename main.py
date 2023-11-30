@@ -63,13 +63,13 @@ def update_ui(impl):
     impl.render(imgui.get_draw_data())
 
 
-def update_data(stream, data, plot, window, metronome):
+def update_data(imu_stream, imu_data, imu_plot, window, metronome):
     new_frames = 0
-    while not stream.data_queue.empty():
+    while not imu_stream.data_queue.empty():
         new_frames += 1
-        frame, FPS = stream.get_frame()
-        data.update(frame[0])
-        plot.update(frame[0])
+        frame, FPS = imu_stream.get_frame()
+        imu_data.update(frame[0])
+        imu_plot.update(frame[0])
         metronome.update()
         if FPS:
             glfw.set_window_title(window, TITLE + "   ---   " + f"FPS: {FPS:.2f}")
@@ -89,23 +89,23 @@ def main():
     impl = init_ui(window)
     
     # stream = Stream('/dev/cu.usbserial-0283D2D2', 1000000, record=False, read_file=False)
-    stream = IMUStream('/dev/cu.usbserial-028574DD', 1000000, record=False, read_file=False)
-    data = IMUData(N_FRAMES)
-    plot = IMUPlot(N_FRAMES)
+    imu_stream = IMUStream('/dev/cu.usbserial-028574DD', 1000000, record=False, read_file=False)
+    imu_data = IMUData(N_FRAMES)
+    imu_plot = IMUPlot(N_FRAMES)
     metronome = Metronome(N_FRAMES, 60)
 
-    renderers = [PolylineRenderer(plot.polylines)]
+    renderers = [PolylineRenderer(imu_plot.polylines)]
 
 
     while not glfw.window_should_close(window):
         glfw.poll_events()
         glClear(GL_COLOR_BUFFER_BIT)
         # update_ui(impl)
-        update_data(stream, data, plot, window, metronome)
+        update_data(imu_stream, imu_data, imu_plot, window, metronome)
         update_data_display(renderers)
         glfw.swap_buffers(window)
 
-    stream.close()
+    imu_stream.close()
     glfw.terminate()
 
 if __name__ == "__main__":

@@ -10,7 +10,7 @@ class Metronome:
     def __init__(self, n_frames, bpm):
         self.bpm = bpm
 
-        self.data = np.zeros(n_frames, dtype=bool)
+        self.beats = np.zeros(n_frames, dtype=bool)
 
         self.high_beat = sa.WaveObject.from_wave_file("sounds/metronome_hi.wav")
         self.low_beat = sa.WaveObject.from_wave_file("sounds/metronome_lo.wav")
@@ -32,14 +32,13 @@ class Metronome:
                 time.sleep(beat_interval)
 
     def update(self):
-        self.data[1:] = self.data[:-1]
-        self.data[0] = self.output
+        self.beats[1:] = self.beats[:-1]
+        self.beats[0] = self.output
 
     @property
     def output(self):
         '''Returns the output state.'''
         if self._output:
             self._output = False
-            print("Metronome triggered")
             return True
         return False
