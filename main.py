@@ -6,8 +6,8 @@ from imgui.integrations.glfw import GlfwRenderer
 
 from modules.imu import IMUData
 from modules.stream import IMUStream
-from modules.plot import IMUPlot, MetronomePlot
-from modules.data_rendering import PolylineRenderer
+from modules.plot import IMUPlot
+from modules.data_rendering import IMURenderer
 from modules.metronome import Metronome
 
 # Constants and Global Variables
@@ -94,7 +94,7 @@ def main():
     imu_plot = IMUPlot(N_FRAMES)
     metronome = Metronome(N_FRAMES, 60)
 
-    renderers = [PolylineRenderer(imu_plot.polylines)]
+    renderers = [IMURenderer(imu_plot.lines)]
 
 
     while not glfw.window_should_close(window):

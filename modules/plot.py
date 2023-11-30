@@ -4,40 +4,47 @@ import glm
 from scipy.spatial.transform import Rotation as R
 from OpenGL.arrays import vbo
 
-class MetronomePlot:
-    '''A class to visually indicate events in timeseries with vertical lines.
-        -
+
+class EventPlot:
+    '''A class to store information about an Event Plot.
+    -The plot is a collection of Event Lines.
+    -The Event Lines are updated based on analysis of frames returned from a stream (serial port or file).
+    -The Event Lines are stored as a list.
+    -The Event Lines are rendered by a renderer.
+    -The renderer is stored as an EventRenderer object.
     '''
     def __init__(self, n_frames):
+        self.lines = [EventLines(n_frames, 0.002, np.array([1, 1,   1, 1]), [1, 1, 1], [0, 0, 0])] #metronome
+
+    def update(self, events_onehot):
+        self.lines[0].update(events_onehot[0])
+        
+
+class EventLines:
+    '''A class to visually indicate events in timeseries with vertical lines.
+    '''
+    def __init__(self, n_frames, width = 0.002, color = np.ones(4, dtype=np.float32), scale = [1, 1, 1], translate = [0, 0, 0]):
         self.x = np.linspace(-1, 1, n_frames)
 
-    def generate_lines(self, labels):
-        print(np.nonzero(labels))
-
-
-class IMUPlot:
-    '''A class to represent information about an IMU plot.
-        -The plot is a collection of polylines.
-        -The polylines are updated by frames returned from a stream (serial port or file).
-        -The polylines are stored as a list.
-        -The polylines are rendered by a renderer.
-        -The renderer is stored as a LineRenderer object.
-    '''
-    def __init__(self, n_frames):
-        self.polylines = [Polyline(n_frames, 0.001, np.array([0, 1,   1, 1]), [1, 1/12, 1], [0, -7/12, 0]),      #acceleration.x
-                          Polyline(n_frames, 0.001, np.array([1, 0,   1, 1]), [1, 1/12, 1], [0, -9/12, 0]),        #acceleration.y
-                          Polyline(n_frames, 0.001, np.array([1, 0.6, 0, 1]), [1, 1/12, 1], [0, -11/12, 0]),     #acceleration.z
-                          Polyline(n_frames, 0.004, np.array([1, 1,   1, 1]), [1, 1/3, 1], [0, -6/12, 0])           #acceleration.mag
-                          ]
+        self.width = width
+        self.color = color
+        self.transform = np.eye(4, dtype=np.float32)
+        self.transform = np.dot(self.transform, scaling_matrix(scale[0], scale[1], scale[2]))
+        self.transform = np.dot(self.transform, translation_matrix(translate[0], translate[1], translate[2]))
     
-    def update(self, data):
-        self.polylines[0].update(data[0])
-        self.polylines[1].update(data[1])
-        self.polylines[2].update(data[2])
-        self.polylines[3].update(np.linalg.norm(data))
+        self.vbo = vbo.VBO(self.vertices)
+
+    def update(self, events_onehot):
+        events = np.argwhere(events_onehot == 1)
+        events = events.reshape(events.shape[0])
+        self.vertices = np.zeros((events.shape[0]), dtype=np.float32)
+        self.vertices = self.x[events]
+        self.vbo.set_array(self.vertices)
 
 
-class Polyline:
+        
+
+class IMULine:
     def __init__(self, n_frames, width = 0.002, color = np.ones(4, dtype=np.float32), scale = [1, 1, 1], translate = [0, 0, 0]):
         self.vertices = np.zeros((n_frames, 3), dtype=np.float32)
         self.vertices[:, 0] = np.linspace(-1, 1, n_frames)
@@ -56,6 +63,31 @@ class Polyline:
         self.vertices[1:, 1] = self.vertices[:-1, 1]
         self.vertices[0, 1] = value
         self.vbo.set_array(self.vertices)
+
+
+class IMUPlot:
+    '''A class to represent information about an IMU Plot.
+        -The plot is a collection of IMU Lines.
+        -The IMU Lines are updated by frames returned from a stream (serial port or file).
+        -The IMU Lines are stored as a list.
+        -The IMU Lines are rendered by a renderer.
+        -The renderer is stored as a IMURenderer object.
+    '''
+    def __init__(self, n_frames):
+        self.lines = [IMULine(n_frames, 0.001, np.array([0, 1,   1, 1]), [1, 1/12, 1], [0, -7/12, 0]), #acceleration.x
+                          IMULine(n_frames, 0.001, np.array([1, 0,   1, 1]), [1, 1/12, 1], [0, -9/12, 0]), #acceleration.y
+                          IMULine(n_frames, 0.001, np.array([1, 0.6, 0, 1]), [1, 1/12, 1], [0, -11/12, 0]), #acceleration.z
+                          IMULine(n_frames, 0.004, np.array([1, 1,   1, 1]), [1, 1/3, 1], [0, -6/12, 0]) #acceleration.mag
+                          ]
+    
+    def update(self, data):
+        self.lines[0].update(data[0])
+        self.lines[1].update(data[1])
+        self.lines[2].update(data[2])
+        self.lines[3].update(np.linalg.norm(data))
+
+
+
 
 
 # Function to create a translation matrix
