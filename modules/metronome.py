@@ -10,7 +10,7 @@ class Metronome:
     def __init__(self, n_frames, bpm):
         self.bpm = bpm
 
-        self.events = np.zeros(n_frames, dtype=bool)
+        self.beats = np.zeros(n_frames, dtype=bool)
 
         self.high_beat = sa.WaveObject.from_wave_file("sounds/metronome_hi.wav")
         self.low_beat = sa.WaveObject.from_wave_file("sounds/metronome_lo.wav")
@@ -32,8 +32,8 @@ class Metronome:
                 time.sleep(beat_interval)
 
     def update(self):
-        self.events[1:] = self.events[:-1]
-        self.events[0] = self.output
+        self.beats[1:] = self.beats[:-1]
+        self.beats[0] = self.output
 
     @property
     def output(self):

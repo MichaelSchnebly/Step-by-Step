@@ -14,10 +14,12 @@ class EventPlot:
     -The renderer is stored as an EventRenderer object.
     '''
     def __init__(self, n_frames):
-        self.lines = [EventLines(n_frames, 0.01, np.array([0.2, 0.2,  0.2, 1]), [1, 1, 1], [0, -1, 0])] #metronome
+        self.lines = [EventLines(n_frames, 0.01, np.array([0.2, 0.2,  0.2, 1]), [1, 1, 1], [0, -1, 0]), #metronome
+                      EventLines(n_frames, 0.01, np.array([1.0, 0.0,  0.0, 1]), [1, 1, 1], [0, -1, 0])] #label
 
     def update(self, events):
         self.lines[0].update(events[0])
+        self.lines[1].update(events[1])
 
 
 class EventLines:

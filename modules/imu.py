@@ -16,10 +16,7 @@ class IMUData:
             -[:, 1] gesture
     '''
     def __init__(self, n_frames):
-        self.timepoints = np.arange(n_frames, dtype=np.float32)
         self.data = np.zeros((n_frames, 3), dtype=np.float32)
-        self.labels = np.zeros((n_frames, 2), dtype=np.uint8)
-        self.labels[:, 0] = 1
         
     def update(self, frame):
         self.update_data(frame)
