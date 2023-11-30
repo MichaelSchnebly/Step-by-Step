@@ -6,8 +6,8 @@ from imgui.integrations.glfw import GlfwRenderer
 
 from modules.imu import IMUData
 from modules.stream import IMUStream
-from modules.plot import IMUPlot
-from modules.data_rendering import IMURenderer
+from modules.plot import IMUPlot, EventPlot
+from modules.render import IMURenderer, EventRenderer
 from modules.metronome import Metronome
 
 # Constants and Global Variables
@@ -63,14 +63,18 @@ def update_ui(impl):
     impl.render(imgui.get_draw_data())
 
 
-def update_data(imu_stream, imu_data, imu_plot, window, metronome):
+def update_data(imu_stream, imu_data, imu_plot, window, metronome, event_plot):
     new_frames = 0
     while not imu_stream.data_queue.empty():
         new_frames += 1
         frame, FPS = imu_stream.get_frame()
+
         imu_data.update(frame[0])
         imu_plot.update(frame[0])
+
         metronome.update()
+        event_plot.update([metronome.events])
+
         if FPS:
             glfw.set_window_title(window, TITLE + "   ---   " + f"FPS: {FPS:.2f}")
 
@@ -80,6 +84,7 @@ def update_data(imu_stream, imu_data, imu_plot, window, metronome):
 def update_data_display(renderers):
     for renderer in renderers:
             renderer.render()
+
 
 def main():
     if not glfw.init():
@@ -92,16 +97,18 @@ def main():
     imu_stream = IMUStream('/dev/cu.usbserial-028574DD', 1000000, record=False, read_file=False)
     imu_data = IMUData(N_FRAMES)
     imu_plot = IMUPlot(N_FRAMES)
+    
     metronome = Metronome(N_FRAMES, 60)
+    event_plot = EventPlot(N_FRAMES)
 
-    renderers = [IMURenderer(imu_plot.lines)]
+    renderers = [IMURenderer(imu_plot.lines), EventRenderer(event_plot.lines)]
 
 
     while not glfw.window_should_close(window):
         glfw.poll_events()
         glClear(GL_COLOR_BUFFER_BIT)
         # update_ui(impl)
-        update_data(imu_stream, imu_data, imu_plot, window, metronome)
+        update_data(imu_stream, imu_data, imu_plot, window, metronome, event_plot)
         update_data_display(renderers)
         glfw.swap_buffers(window)
 

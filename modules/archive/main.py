@@ -7,7 +7,7 @@ from imgui.integrations.glfw import GlfwRenderer
 
 from modules.stream import IMUStream
 from modules.plot import LineData2D #, LineData3D
-from modules.data_rendering import LineRenderer2D, OpenGLApp #, LineRenderer3D
+from modules.render import LineRenderer2D, OpenGLApp #, LineRenderer3D
 
 # Constants and Global Variables
 TITLE = "Realtime IMU Data"

@@ -14,17 +14,18 @@ class EventPlot:
     -The renderer is stored as an EventRenderer object.
     '''
     def __init__(self, n_frames):
-        self.lines = [EventLines(n_frames, 0.002, np.array([1, 1,   1, 1]), [1, 1, 1], [0, 0, 0])] #metronome
+        self.lines = [EventLines(n_frames, 0.01, np.array([0.2, 0.2,  0.2, 1]), [1, 1, 1], [0, -1, 0])] #metronome
 
-    def update(self, events_onehot):
-        self.lines[0].update(events_onehot[0])
-        
+    def update(self, events):
+        self.lines[0].update(events[0])
+
 
 class EventLines:
     '''A class to visually indicate events in timeseries with vertical lines.
     '''
     def __init__(self, n_frames, width = 0.002, color = np.ones(4, dtype=np.float32), scale = [1, 1, 1], translate = [0, 0, 0]):
-        self.x = np.linspace(-1, 1, n_frames)
+        self.x = np.linspace(-1, 1, n_frames, dtype=np.float32)
+        self.vertices = np.zeros(1, dtype=np.float32)
 
         self.width = width
         self.color = color
@@ -35,21 +36,20 @@ class EventLines:
         self.vbo = vbo.VBO(self.vertices)
 
     def update(self, events_onehot):
-        events = np.argwhere(events_onehot == 1)
+        events = np.argwhere(events_onehot == True)
         events = events.reshape(events.shape[0])
         self.vertices = np.zeros((events.shape[0]), dtype=np.float32)
         self.vertices = self.x[events]
         self.vbo.set_array(self.vertices)
-
 
         
 
 class IMULine:
     def __init__(self, n_frames, width = 0.002, color = np.ones(4, dtype=np.float32), scale = [1, 1, 1], translate = [0, 0, 0]):
         self.vertices = np.zeros((n_frames, 3), dtype=np.float32)
-        self.vertices[:, 0] = np.linspace(-1, 1, n_frames)
-        self.vertices[:, 1] = np.zeros(n_frames)
-        self.vertices[:, 2] = np.zeros(n_frames)
+        self.vertices[:, 0] = np.linspace(-1, 1, n_frames, dtype=np.float32)
+        self.vertices[:, 1] = np.zeros(n_frames, dtype=np.float32)
+        self.vertices[:, 2] = np.zeros(n_frames, dtype=np.float32)
 
         self.width = width
         self.color = color

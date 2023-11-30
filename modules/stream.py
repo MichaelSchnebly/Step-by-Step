@@ -72,8 +72,8 @@ class IMUStream:
     
     def close(self):
         '''Closes the serial connection and file.'''
-        self.ser.close()
-        print("Serial connection closed.")
+        # self.ser.close()
+        # print("Serial connection closed.")
         if self.record:
             self.file.close()
             print("File closed.")
