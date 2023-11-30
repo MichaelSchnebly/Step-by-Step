@@ -23,7 +23,12 @@ class IMUData:
         self.labels = np.zeros((n_frames, 2), dtype=np.uint8)
         self.labels[:, 0] = 1
         
+    def update(self, frame):
+        self.update_data(frame)
+
     def update_data(self, frame):
-        self.labels[1:, :] = self.labels[:-1, :]
         self.data[1:, :] = self.data[:-1, :]
         self.data[0, :] = frame
+
+    def update_labels(self):
+        self.labels[1:, :] = self.labels[:-1, :]

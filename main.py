@@ -5,8 +5,8 @@ import imgui
 from imgui.integrations.glfw import GlfwRenderer
 
 from modules.imu import IMUData
-from modules.data_stream import IMUStream
-from modules.data_processing import Polyline, IMUPlot
+from modules.stream import IMUStream
+from modules.plot import IMUPlot, MetronomePlot
 from modules.data_rendering import PolylineRenderer
 from modules.metronome import Metronome
 
@@ -63,15 +63,14 @@ def update_ui(impl):
     impl.render(imgui.get_draw_data())
 
 
-def update_data(stream, plot, window):
+def update_data(stream, data, plot, window, metronome):
     new_frames = 0
     while not stream.data_queue.empty():
         new_frames += 1
         frame, FPS = stream.get_frame()
+        data.update(frame[0])
         plot.update(frame[0])
-        # data[0].update(frame[0, 0])
-        # data[1].update(frame[0, 1])
-        # data[2].update(frame[0, 2]) 
+        metronome.update()
         if FPS:
             glfw.set_window_title(window, TITLE + "   ---   " + f"FPS: {FPS:.2f}")
 
@@ -91,25 +90,18 @@ def main():
     
     # stream = Stream('/dev/cu.usbserial-0283D2D2', 1000000, record=False, read_file=False)
     stream = IMUStream('/dev/cu.usbserial-028574DD', 1000000, record=False, read_file=False)
-
-    # data = [Polyline(N_FRAMES, 0.002, np.array([1, 1, 1, 1]), [1, 1/3, 1], [0, 2/3, 0]),      #acceleration.x
-    #         Polyline(N_FRAMES, 0.002, np.array([1, 1, 1, 1]), [1, 1/3, 1], [0, 0, 0]),        #acceleration.y
-    #         Polyline(N_FRAMES, 0.002, np.array([1, 1, 1, 1]), [1, 1/3, 1], [0, -2/3, 0]),     #acceleration.z
-    #         Polyline(N_FRAMES, 0.002, np.array([1, 1, 1, 1]), [1, 1, 1], [0, 0, 0])           #acceleration.mag
-    #         ]
-    
-    # data = IMUData(N_FRAMES)
+    data = IMUData(N_FRAMES)
     plot = IMUPlot(N_FRAMES)
-    
+    metronome = Metronome(N_FRAMES, 60)
+
     renderers = [PolylineRenderer(plot.polylines)]
 
-    metronome = Metronome(120)
 
     while not glfw.window_should_close(window):
         glfw.poll_events()
         glClear(GL_COLOR_BUFFER_BIT)
-        update_ui(impl)
-        update_data(stream, plot, window)
+        # update_ui(impl)
+        update_data(stream, data, plot, window, metronome)
         update_data_display(renderers)
         glfw.swap_buffers(window)
 

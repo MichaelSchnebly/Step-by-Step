@@ -4,6 +4,16 @@ import glm
 from scipy.spatial.transform import Rotation as R
 from OpenGL.arrays import vbo
 
+class MetronomePlot:
+    '''A class to visually indicate events in timeseries with vertical lines.
+        -
+    '''
+    def __init__(self, n_frames):
+        self.x = np.linspace(-1, 1, n_frames)
+
+    def generate_lines(self, labels):
+        print(np.nonzero(labels))
+
 
 class IMUPlot:
     '''A class to represent information about an IMU plot.

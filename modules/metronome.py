@@ -1,13 +1,16 @@
 import threading
 import time
 import simpleaudio as sa
+import numpy as np
 
 
 class Metronome:
     '''A metronome thread that plays a sound and triggers an output at a given BPM.
     '''
-    def __init__(self, bpm):
+    def __init__(self, n_frames, bpm):
         self.bpm = bpm
+
+        self.data = np.zeros(n_frames, dtype=bool)
 
         self.high_beat = sa.WaveObject.from_wave_file("sounds/metronome_hi.wav")
         self.low_beat = sa.WaveObject.from_wave_file("sounds/metronome_lo.wav")
@@ -27,6 +30,10 @@ class Metronome:
                     self.low_beat.play()
                 self._output = True
                 time.sleep(beat_interval)
+
+    def update(self):
+        self.data[1:] = self.data[:-1]
+        self.data[0] = self.output
 
     @property
     def output(self):
