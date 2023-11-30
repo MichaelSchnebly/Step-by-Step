@@ -12,7 +12,7 @@ class GestureData:
             -[:, 1] gesture
     '''
     def __init__(self, n_frames):
-        self.labels = np.zeros((n_frames, 2), dtype=np.uint8)
+        self.labels = np.zeros((n_frames, 2), dtype=np.float32)
         self.labels[:, 0] = 1
 
         self.window = 20
