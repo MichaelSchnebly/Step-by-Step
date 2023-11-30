@@ -5,7 +5,7 @@ from OpenGL import GL
 import imgui
 from imgui.integrations.glfw import GlfwRenderer
 
-from modules.data_stream import Stream
+from modules.data_stream import IMUStream
 from modules.data_processing import LineData2D #, LineData3D
 from modules.data_rendering import LineRenderer2D, OpenGLApp #, LineRenderer3D
 
@@ -49,7 +49,7 @@ def main():
     opengl_app.init_gl()
 
     # stream = Stream('/dev/cu.usbserial-0283D2D2', 1000000, record=False, read_file=False)
-    stream = Stream('/dev/cu.usbserial-028574DD', 1000000, record=False, read_file=False)
+    stream = IMUStream('/dev/cu.usbserial-028574DD', 1000000, record=False, read_file=False)
 
 
 

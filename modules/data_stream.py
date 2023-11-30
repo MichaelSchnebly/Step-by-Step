@@ -5,7 +5,7 @@ import serial
 import numpy as np
 
 
-class Stream:
+class IMUStream:
     '''A class to represent a stream of data.
         -The stream is a queue of sensor values.
         -This queue is updated by a thread that reads from the serial port.

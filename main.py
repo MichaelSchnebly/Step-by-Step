@@ -4,14 +4,15 @@ from OpenGL.GL import *
 import imgui
 from imgui.integrations.glfw import GlfwRenderer
 
-from modules.data_stream import Stream
-from modules.data_processing import PolylineData
+from modules.imu import IMUData
+from modules.data_stream import IMUStream
+from modules.data_processing import Polyline, IMUPlot
 from modules.data_rendering import PolylineRenderer
 from modules.metronome import Metronome
 
 # Constants and Global Variables
 TITLE = "Realtime IMU Data"
-NUM_POINTS = 1000
+N_FRAMES = 500
 FPS = 0
 
 def init_window():
@@ -24,7 +25,7 @@ def init_window():
     # monitor = glfw.get_primary_monitor()
     # mode = glfw.get_video_mode(monitor)
     # window = glfw.create_window(mode.size.width, mode.size.height, TITLE, None, None)
-    window = glfw.create_window(720, 720, TITLE, None, None)
+    window = glfw.create_window(1080, 1080, TITLE, None, None)
 
     if not window:
         glfw.terminate()
@@ -62,14 +63,15 @@ def update_ui(impl):
     impl.render(imgui.get_draw_data())
 
 
-def update_data(stream, data, window):
+def update_data(stream, plot, window):
     new_frames = 0
     while not stream.data_queue.empty():
         new_frames += 1
         frame, FPS = stream.get_frame()
-        data[0].update(frame[0, 0])
-        data[1].update(frame[0, 1])
-        data[2].update(frame[0, 2]) 
+        plot.update(frame[0])
+        # data[0].update(frame[0, 0])
+        # data[1].update(frame[0, 1])
+        # data[2].update(frame[0, 2]) 
         if FPS:
             glfw.set_window_title(window, TITLE + "   ---   " + f"FPS: {FPS:.2f}")
 
@@ -88,15 +90,18 @@ def main():
     impl = init_ui(window)
     
     # stream = Stream('/dev/cu.usbserial-0283D2D2', 1000000, record=False, read_file=False)
-    stream = Stream('/dev/cu.usbserial-028574DD', 1000000, record=False, read_file=False)
+    stream = IMUStream('/dev/cu.usbserial-028574DD', 1000000, record=False, read_file=False)
 
-    data = [PolylineData(NUM_POINTS, 0.002, np.array([1, 1, 1, 1]), [1, 1/3, 1], [0, 2/3, 0]),      #acceleration.x
-            PolylineData(NUM_POINTS, 0.002, np.array([1, 1, 1, 1]), [1, 1/3, 1], [0, 0, 0]),        #acceleration.y
-            PolylineData(NUM_POINTS, 0.002, np.array([1, 1, 1, 1]), [1, 1/3, 1], [0, -2/3, 0]),     #acceleration.z
-            PolylineData(NUM_POINTS, 0.002, np.array([1, 1, 1, 1]), [1, 1, 1], [0, 0, 0])           #acceleration.mag
-            ]
+    # data = [Polyline(N_FRAMES, 0.002, np.array([1, 1, 1, 1]), [1, 1/3, 1], [0, 2/3, 0]),      #acceleration.x
+    #         Polyline(N_FRAMES, 0.002, np.array([1, 1, 1, 1]), [1, 1/3, 1], [0, 0, 0]),        #acceleration.y
+    #         Polyline(N_FRAMES, 0.002, np.array([1, 1, 1, 1]), [1, 1/3, 1], [0, -2/3, 0]),     #acceleration.z
+    #         Polyline(N_FRAMES, 0.002, np.array([1, 1, 1, 1]), [1, 1, 1], [0, 0, 0])           #acceleration.mag
+    #         ]
     
-    renderers = [PolylineRenderer(data)]
+    # data = IMUData(N_FRAMES)
+    plot = IMUPlot(N_FRAMES)
+    
+    renderers = [PolylineRenderer(plot.polylines)]
 
     metronome = Metronome(120)
 
@@ -104,7 +109,7 @@ def main():
         glfw.poll_events()
         glClear(GL_COLOR_BUFFER_BIT)
         update_ui(impl)
-        update_data(stream, data, window)
+        update_data(stream, plot, window)
         update_data_display(renderers)
         glfw.swap_buffers(window)
 
