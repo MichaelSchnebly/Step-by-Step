@@ -15,7 +15,7 @@ class GestureData:
         self.labels = np.zeros((n_frames, 2), dtype=np.float32)
         self.labels[:, 0] = 1
 
-        self.window = 20
+        self.window = 21
         self.peak_idx = self.window // 2
         self.peak_threshold = 0.5
 

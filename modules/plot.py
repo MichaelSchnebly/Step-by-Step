@@ -45,6 +45,34 @@ class EventLines:
         self.vbo.set_array(self.vertices)
 
         
+class NNLine:
+    def __init__(self, n_frames, width = 0.002, color = np.ones(4, dtype=np.float32), scale = [1, 1, 1], translate = [0, 0, 0]):
+        self.vertices = np.zeros((n_frames, 3), dtype=np.float32)
+        self.vertices[:, 0] = np.linspace(-1, 1, n_frames, dtype=np.float32)
+        self.vertices[:, 1] = np.zeros(n_frames, dtype=np.float32)
+        self.vertices[:, 2] = np.zeros(n_frames, dtype=np.float32)
+
+        self.width = width
+        self.color = color
+        self.transform = np.eye(4, dtype=np.float32)
+        self.transform = np.dot(self.transform, scaling_matrix(scale[0], scale[1], scale[2]))
+        self.transform = np.dot(self.transform, translation_matrix(translate[0], translate[1], translate[2]))
+    
+        self.vbo = vbo.VBO(self.vertices)
+
+    def update(self, values):
+        # self.vertices[1:, 1] = self.vertices[:-1, 1]
+        # self.vertices[0, 1] = value
+        self.vertices[:, 1] = values
+        self.vbo.set_array(self.vertices)
+
+class NNPlot:
+    def __init__(self, n_frames):
+        self.lines = [NNLine(n_frames, 0.001, np.array([1, 1,  1, 1]), [1, 1, 1], [0, 0, 0])]
+    
+    def update(self, values):
+        self.lines[0].update(values[0])
+
 
 class IMULine:
     def __init__(self, n_frames, width = 0.002, color = np.ones(4, dtype=np.float32), scale = [1, 1, 1], translate = [0, 0, 0]):
