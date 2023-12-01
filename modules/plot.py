@@ -66,12 +66,20 @@ class NNLine:
         self.vertices[:, 1] = values
         self.vbo.set_array(self.vertices)
 
+    def shift(self):
+        self.vertices[1:, 1] = self.vertices[:-1, 1]
+        self.vertices[0, 1] = 0
+        self.vbo.set_array(self.vertices)
+
 class NNPlot:
     def __init__(self, n_frames):
         self.lines = [NNLine(n_frames, 0.001, np.array([1, 1,  1, 1]), [1, 1, 1], [0, 0, 0])]
     
     def update(self, values):
         self.lines[0].update(values[0])
+
+    def shift(self):
+        self.lines[0].shift()
 
 
 class IMULine:

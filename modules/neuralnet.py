@@ -40,7 +40,7 @@ class NeuralNetData:
         self.output_labels[0, :] = output_labels
 
     def update_results(self, output_result):
-        i = self.batch_count
+        i = self.batch_count + 10
         b = self.batch_size
         # j = 0 if i - b < 0 else i - b
         self.output_results[i+b:] = self.output_results[i:-b]
@@ -51,8 +51,9 @@ class NeuralNetData:
 
 
 class NeuralNetModel:
-    def __init__(self, nn_data):
+    def __init__(self, nn_data, nn_plot):
         self.nn_data = nn_data
+        self.nn_plot = nn_plot
         self.model = self.build()
         
 
@@ -122,6 +123,7 @@ class NeuralNetModel:
                 post_diff = self.nn_data.batch_count
                 print("Pre: " + str(pre_diff) + "   Post: " + str(post_diff))
                 self.nn_data.update_results(output[:,1])
+                self.nn_plot.update([self.nn_data.output_results])
                 
 
             # INPUT_DATA = self.nn_data.input_data[:1]

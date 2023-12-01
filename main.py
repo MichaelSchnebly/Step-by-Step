@@ -86,7 +86,7 @@ def update_data(imu_stream, imu_data, imu_plot, window, metronome, event_plot, g
                        gesture_data.labels[i,:])
         
         # print(nn_data.output_results)
-        nn_plot.update([nn_data.output_results])
+        nn_plot.shift()
 
         metronome.update()
         event_plot.update([metronome.beats, gesture_data.labels[:,1]])
@@ -116,15 +116,15 @@ def main():
 
     gesture_data = GestureData(N_FRAMES)
 
+    nn_plot = NNPlot(N_FRAMES)
     nn_data = NeuralNetData(N_FRAMES, N_INPUT_FRAMES, N_MEMORY_FRAMES)
-    nn_model = NeuralNetModel(nn_data)
+    nn_model = NeuralNetModel(nn_data, nn_plot)
+
     nn_training_thread = threading.Thread(target=nn_model.train, daemon=True)
     nn_inference_thread = threading.Thread(target=nn_model.predict, daemon=True)
         
     metronome = Metronome(N_FRAMES, 60)
     event_plot = EventPlot(N_FRAMES)
-
-    nn_plot = NNPlot(N_FRAMES)
 
     renderers = [IMURenderer(imu_plot.lines), EventRenderer(event_plot.lines), NNRenderer(nn_plot.lines)]
 
