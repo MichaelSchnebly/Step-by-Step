@@ -87,21 +87,6 @@ def update_data(imu_stream, imu_data, imu_plot, window, metronome, event_plot, g
         
         # print(nn_data.output_results)
         nn_plot.update([nn_data.output_results])
-        
-
-
-        # output = nn_model.model.predict([nn_data.input_data[:1], nn_data.input_memory[:1]], 1)
-        # nn_data.update_results(output[0][1])
-        # print(output[0])
-
-        # j = i
-        # if gesture_data.labels[j,1] == 1:
-        #     print(imu_data.data[i:i+N_INPUT_FRAMES])
-        #     print(gesture_data.labels[i:i+N_MEMORY_FRAMES,1])
-        #     print(gesture_data.labels[i,:])
-        #     exit()
-
-        # print(np.argwhere(gesture_data.labels[:,1] == True))
 
         metronome.update()
         event_plot.update([metronome.beats, gesture_data.labels[:,1]])

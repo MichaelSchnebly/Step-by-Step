@@ -12,7 +12,7 @@ import time
 class NeuralNetData:
     def __init__(self, n_samples, n_input_frames, n_memory_frames, n_features=3, n_labels=2):
         
-        self.batch_size = 16
+        self.batch_size = 32
         self.batch_count = 0
         self.count = 0
 
@@ -43,7 +43,7 @@ class NeuralNetData:
         i = self.batch_count
         b = self.batch_size
         # j = 0 if i - b < 0 else i - b
-        self.output_results[i:] = self.output_results[:-i]
+        self.output_results[i+b:] = self.output_results[i:-b]
         self.output_results[i:i+b] = output_result
         # if output_result > 0.5:
         #     print(output_result)
