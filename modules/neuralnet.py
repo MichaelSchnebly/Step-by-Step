@@ -121,7 +121,7 @@ class NeuralNetModel:
                 INPUT_MEMORY = self.nn_data.input_memory[pre_diff:pre_diff+size]
                 output = self.model.predict([INPUT_DATA, INPUT_MEMORY], size, verbose=0)
                 post_diff = self.nn_data.batch_count
-                print("Pre: " + str(pre_diff) + "   Post: " + str(post_diff))
+                # print("Pre: " + str(pre_diff) + "   Post: " + str(post_diff))
                 self.nn_data.update_results(output[:,1])
                 self.nn_plot.update([self.nn_data.output_results])
                 
