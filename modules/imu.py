@@ -24,6 +24,3 @@ class IMUData:
     def update_data(self, frame):
         self.data[1:, :] = self.data[:-1, :]
         self.data[0, :] = frame
-
-    def update_labels(self):
-        self.labels[1:, :] = self.labels[:-1, :]
