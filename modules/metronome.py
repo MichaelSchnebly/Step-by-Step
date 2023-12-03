@@ -5,25 +5,31 @@ import numpy as np
 
 
 class Metronome:
-    '''A metronome thread that plays a sound and triggers an output at a given BPM.
-    '''
     def __init__(self, n_frames, bpm):
         self.bpm = bpm
-
         self.beats = np.zeros(n_frames, dtype=bool)
-
         self.high_beat = sa.WaveObject.from_wave_file("sounds/metronome_hi.wav")
         self.low_beat = sa.WaveObject.from_wave_file("sounds/metronome_lo.wav")
         self._output = False
+        self.running = False
 
-        self.thread = threading.Thread(target=self.run, daemon=True)
-        self.thread.start()
+    def start(self):
+        if not self.running:
+            self.running = True
+            self.thread = threading.Thread(target=self.run, daemon=True)
+            self.thread.start()
 
+    def stop(self):
+        if self.running:
+            self.running = False
+            self.thread.join()
+        
     def run(self):
-        '''Plays a sound and triggers an output at a given BPM.'''
         beat_interval = 60 / self.bpm
-        while True:
+        while self.running:
             for i in range(4):
+                if not self.running:
+                    break
                 if i == 0:
                     self.high_beat.play()
                 else:
@@ -37,7 +43,6 @@ class Metronome:
 
     @property
     def output(self):
-        '''Returns the output state.'''
         if self._output:
             self._output = False
             return True

@@ -23,14 +23,16 @@ FPS = 0
 
 # HOTKEY CONDITIONALS
 class Hotkeys:
-    def __init__(self, imu_stream, nn_model):
+    def __init__(self, imu_stream, metronome, nn_model):
         self.PAUSE = False
 
         self.imu_stream = imu_stream
         self.IMU_STREAM = False
         self.MAGNITUDE = False
 
+        self.metronome = metronome
         self.METRONOME = False
+
         self.LABELLING = False
 
         self.nn_model = nn_model
@@ -50,8 +52,11 @@ class Hotkeys:
                 self.nn_model.stop_training()
                 self.nn_model.stop_inference()
                 self.imu_stream.stop()
+                self.metronome.stop()
             else:
                 print("Starting Application...")
+                if self.METRONOME:
+                    self.metronome.start()
                 if self.IMU_STREAM:
                     self.imu_stream.start()
                 if self.NN_INFERENCE:
@@ -73,8 +78,14 @@ class Hotkeys:
             self.MAGNITUDE = not self.MAGNITUDE
 
         if key == glfw.KEY_3 and action == glfw.PRESS:
-            print("3: METRONOME")
             self.METRONOME = not self.METRONOME
+            if self.METRONOME:
+                print("Starting Metronome...")
+                self.metronome.start()
+            else:
+                print("Stopping Metronome...")
+                self.metronome.stop()
+
         if key == glfw.KEY_4 and action == glfw.PRESS:
             print("4: LABELLING")
             self.LABELLING = not self.LABELLING
@@ -164,35 +175,28 @@ def update_ui(impl):
 
 
 def update_data(imu_stream, imu_data, imu_plot, window, metronome, event_plot, gesture_data, nn_data, nn_plot):
-    new_frames = 0
     while not imu_stream.data_queue.empty():
-        new_frames += 1
         frame, FPS = imu_stream.get_frame()
 
         imu_data.update(frame[0]) #acceleration.x, acceleration.y, acceleration.z
-        imu_plot.update(frame[0]) #acceleration.x, acceleration.y, acceleration.z
+        imu_plot.update(frame[0])
 
         gesture_data.update(np.linalg.norm(frame[0])) #acceleration.mag
+        metronome.update()
+
+        event_plot.update([metronome.beats, gesture_data.labels[:,1]])
 
         i = gesture_data.peak_idx
         nn_data.update(imu_data.data[i:i+N_INPUT_FRAMES], 
                        gesture_data.labels[i+1:i+1+N_MEMORY_FRAMES,1],
                        gesture_data.labels[i,:])
-        
         nn_plot.shift()
 
-        metronome.update()
-        event_plot.update([metronome.beats, gesture_data.labels[:,1]])
 
         if FPS:
             glfw.set_window_title(window, TITLE + "   ---   " + f"FPS: {FPS:.2f}")
 
-    return new_frames
 
-
-def update_data_display(renderers):
-    for renderer in renderers:
-            renderer.render()
 
 def on_key(window, key, scancode, action, mods):
     if key == glfw.KEY_ESCAPE and action == glfw.PRESS:
@@ -223,9 +227,11 @@ def main():
 
     event_plot = EventPlot(N_FRAMES)
 
-    renderers = [EventRenderer(event_plot.lines), IMURenderer(imu_plot.lines), NNRenderer(nn_plot.lines)]
+    event_renderer = EventRenderer(event_plot.lines)
+    imu_renderer = IMURenderer(imu_plot.lines)
+    nn_renderer = NNRenderer(nn_plot.lines)
 
-    HOTKEYS = Hotkeys(imu_stream, nn_model)
+    HOTKEYS = Hotkeys(imu_stream, metronome, nn_model)
     glfw.set_key_callback(window, HOTKEYS.update)
 
     while not glfw.window_should_close(window):
@@ -233,8 +239,12 @@ def main():
             glfw.poll_events()
             glClear(GL_COLOR_BUFFER_BIT)
             # update_ui(impl)
+
             update_data(imu_stream, imu_data, imu_plot, window, metronome, event_plot, gesture_data, nn_data, nn_plot)
-            update_data_display(renderers)
+            event_renderer.render()
+            imu_renderer.render()
+            nn_renderer.render()
+
             glfw.swap_buffers(window)
         else:
             glfw.wait_events()
