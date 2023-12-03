@@ -61,6 +61,9 @@ class Hotkeys:
         if key == glfw.KEY_7 and action == glfw.PRESS:
             print("7: Exporting model...")
             self.EXPORT = not self.EXPORT
+        if key == glfw.KEY_R and action == glfw.PRESS:
+            print("R: Resetting...")
+            self.reset()
 
     def reset(self):
         self.PAUSE = False
