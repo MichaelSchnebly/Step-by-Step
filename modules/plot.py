@@ -14,8 +14,8 @@ class EventPlot:
     -The renderer is stored as an EventRenderer object.
     '''
     def __init__(self, n_frames):
-        self.lines = [EventLines(n_frames, 0.05, np.array([0.2, 0.2,  0.2, 1]), [1, 1, 1], [0, -1, 0]), #metronome
-                      EventLines(n_frames, 0.05, np.array([1.0, 0.0,  0.0, 1]), [1, 1, 1], [0, -1, 0])] #label
+        self.lines = [EventLines(n_frames, 0.01, np.array([0.2, 0.2,  0.2, 1]), [1, 1, 1], [0, -1, 0]), #metronome
+                      EventLines(n_frames, 0.01, np.array([1.0, 0.0,  0.0, 1]), [1, 1, 1], [0, -1, 0])] #label
 
     def update(self, events):
         self.lines[0].update(events[0])
@@ -73,7 +73,7 @@ class NNLine:
 
 class NNPlot:
     def __init__(self, n_frames):
-        self.lines = [NNLine(n_frames, 0.002, np.array([1, 1,  1, 1]), [1, 1, 1], [0, 0, 0])]
+        self.lines = [NNLine(n_frames, 0.006, np.array([1, 1,  1, 1]), [1, 1, 1], [0, 0, 0])]
     
     def update(self, values):
         self.lines[0].update(values[0])
@@ -112,10 +112,10 @@ class IMUPlot:
         -The renderer is stored as a IMURenderer object.
     '''
     def __init__(self, n_frames):
-        self.lines = [IMULine(n_frames, 0.005, np.array([0, 1,   1, 1]), [1, 1/12, 1], [0, -7/12, 0]), #acceleration.x
-                          IMULine(n_frames, 0.005, np.array([1, 0,   1, 1]), [1, 1/12, 1], [0, -9/12, 0]), #acceleration.y
-                          IMULine(n_frames, 0.005, np.array([1, 0.6, 0, 1]), [1, 1/12, 1], [0, -11/12, 0]), #acceleration.z
-                          IMULine(n_frames, 0.020, np.array([1, 1,   1, 1]), [1, 1/3, 1], [0, -6/12, 0]) #acceleration.mag
+        self.lines = [IMULine(n_frames, 0.003, np.array([0, 1,   1, 1]), [1, 1/12, 1], [0, -7/12, 0]), #acceleration.x
+                          IMULine(n_frames, 0.003, np.array([1, 0,   1, 1]), [1, 1/12, 1], [0, -9/12, 0]), #acceleration.y
+                          IMULine(n_frames, 0.003, np.array([1, 0.6, 0, 1]), [1, 1/12, 1], [0, -11/12, 0]), #acceleration.z
+                          IMULine(n_frames, 0.006, np.array([1, 1,   1, 1]), [1, 1/3, 1], [0, -6/12, 0]) #acceleration.mag
                           ]
     
     def update(self, data):

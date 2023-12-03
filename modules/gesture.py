@@ -41,7 +41,6 @@ class GestureData:
         
         
     def find_peak(self):
-        # print(self.data[0])
         max_value = np.nanmax(self.data)
 
         if math.isnan(max_value):

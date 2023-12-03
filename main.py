@@ -21,6 +21,59 @@ N_INPUT_FRAMES = 20
 N_MEMORY_FRAMES = 15
 FPS = 0
 
+# HOTKEY CONDITIONALS
+class Hotkeys:
+    def __init__(self):
+        self.PAUSE = False
+        self.ACC_XYZ = False
+        self.ACC_MAG = False
+        self.METRONOME = False
+        self.LABELLING = False
+        self.NN_INFERENCE = False
+        self.NN_TRAINING = False
+        self.EXPORT = False
+
+    def update(self, window, key, scancode, action, mods):
+        if key == glfw.KEY_ESCAPE and action == glfw.PRESS:
+            print("ESC: Exiting...")
+            glfw.set_window_should_close(window, True)
+        if key == glfw.KEY_SPACE and action == glfw.PRESS:
+            print("SPACE: Play/Pause")
+            self.PAUSE = not self.PAUSE
+        if key == glfw.KEY_1 and action == glfw.PRESS:
+            print("1: ACC_XYZ")
+            self.ACC_XYZ = not self.ACC_XYZ
+        if key == glfw.KEY_2 and action == glfw.PRESS:
+            print("2: ACC_MAG")
+            self.ACC_MAG = not self.ACC_MAG
+        if key == glfw.KEY_3 and action == glfw.PRESS:
+            print("3: METRONOME")
+            self.METRONOME = not self.METRONOME
+        if key == glfw.KEY_4 and action == glfw.PRESS:
+            print("4: LABELLING")
+            self.LABELLING = not self.LABELLING
+        if key == glfw.KEY_5 and action == glfw.PRESS:
+            print("5: NN_INFERENCE")
+            self.NN_INFERENCE = not self.NN_INFERENCE
+        if key == glfw.KEY_6 and action == glfw.PRESS:
+            print("6: NN_TRAINING")
+            self.NN_TRAINING = not self.NN_TRAINING
+        if key == glfw.KEY_7 and action == glfw.PRESS:
+            print("7: Exporting model...")
+            self.EXPORT = not self.EXPORT
+
+    def reset(self):
+        self.PAUSE = False
+        self.ACC_XYZ = False
+        self.ACC_MAG = False
+        self.METRONOME = False
+        self.LABELLING = False
+        self.NN_INFERENCE = False
+        self.NN_TRAINING = False
+        self.EXPORT = False
+
+HOTKEYS = Hotkeys()
+
 def init_window():
     """Initializes and returns a GLFW window."""
     glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 4)
@@ -38,14 +91,17 @@ def init_window():
         raise Exception("GLFW window can't be created")
     
     glfw.make_context_current(window)
+    glfw.set_key_callback(window, HOTKEYS.update)
     return window
 
 def init_gl():
     """Initializes OpenGL state."""
     glClearColor(0.0, 0.0, 0.0, 1.0)
-    glEnable(GL_PROGRAM_POINT_SIZE)
+    glEnable(GL_MULTISAMPLE)
+    # glEnable(GL_PROGRAM_POINT_SIZE)
     glEnable(GL_BLEND)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+    glEnable(GL_LINE_SMOOTH)
 
 
 def init_ui(window):
@@ -101,23 +157,28 @@ def update_data_display(renderers):
     for renderer in renderers:
             renderer.render()
 
+def on_key(window, key, scancode, action, mods):
+    if key == glfw.KEY_ESCAPE and action == glfw.PRESS:
+        glfw.set_window_should_close(window, True)
 
 def main():
     if not glfw.init():
         raise Exception("GLFW can't be initialized")
     
+    
     window = init_window()
+    init_gl()
     # impl = init_ui(window)
     
-    imu_stream = IMUStream('/dev/cu.usbserial-0283D2D2', 1000000, record=False, read_file=False)
-    # imu_stream = IMUStream('/dev/cu.usbserial-028574DD', 1000000, record=False, read_file=False)
+    # imu_stream = IMUStream('/dev/cu.usbserial-0283D2D2', 1000000, record=False, read_file=False)
+    imu_stream = IMUStream('/dev/cu.usbserial-028574DD', 1000000, record=False, read_file=False)
     imu_data = IMUData(N_FRAMES)
     imu_plot = IMUPlot(N_FRAMES)
 
     gesture_data = GestureData(N_FRAMES)
 
     nn_plot = NNPlot(N_FRAMES)
-    nn_data = NeuralNetData(N_FRAMES, N_INPUT_FRAMES, N_MEMORY_FRAMES)
+    nn_data = NeuralNetData(N_FRAMES, N_INPUT_FRAMES, N_MEMORY_FRAMES, gesture_data.peak_idx)
     nn_model = NeuralNetModel(nn_data, nn_plot)
 
     nn_training_thread = threading.Thread(target=nn_model.train, daemon=True)
@@ -126,7 +187,7 @@ def main():
     metronome = Metronome(N_FRAMES, 60)
     event_plot = EventPlot(N_FRAMES)
 
-    renderers = [IMURenderer(imu_plot.lines), EventRenderer(event_plot.lines), NNRenderer(nn_plot.lines)]
+    renderers = [EventRenderer(event_plot.lines), IMURenderer(imu_plot.lines), NNRenderer(nn_plot.lines)]
 
     nn_training_thread.start()
     nn_inference_thread.start()

@@ -10,15 +10,16 @@ import time
 
 
 class NeuralNetData:
-    def __init__(self, n_samples, n_input_frames, n_memory_frames, n_features=3, n_labels=2):
+    def __init__(self, n_samples, n_input_frames, n_memory_frames, labeling_delay, n_features=3, n_labels=2):
         
-        self.batch_size = 32
+        self.batch_size = 16
         self.batch_count = 0
         self.count = 0
 
         self.n_samples = n_samples
         self.n_input_frames = n_input_frames
         self.n_memory_frames = n_memory_frames
+        self.labeling_delay = labeling_delay
         self.n_features = n_features
         self.n_labels = n_labels
         
@@ -40,7 +41,7 @@ class NeuralNetData:
         self.output_labels[0, :] = output_labels
 
     def update_results(self, output_result):
-        i = self.batch_count + 10
+        i = self.batch_count + self.labeling_delay
         b = self.batch_size
         # j = 0 if i - b < 0 else i - b
         self.output_results[i+b:] = self.output_results[i:-b]
@@ -87,28 +88,13 @@ class NeuralNetModel:
             INPUT_DATA = self.nn_data.input_data
             INPUT_MEMORY = self.nn_data.input_memory
             OUTPUT_LABELS = self.nn_data.output_labels
-            # if np.sum(OUTPUT_LABELS[:1,1]) >= 1:
-            #     print("\n\n")
-            #     print(INPUT_DATA[:1])
-            #     print(INPUT_MEMORY[:1])
-            #     print(OUTPUT_LABELS[:1])
-            #     output_result = self.infer(INPUT_DATA[:1], INPUT_MEMORY[:1])
-            #     print(output_result)
-            #     print("\n\n")
             self.model.fit([INPUT_DATA, INPUT_MEMORY],
                                 OUTPUT_LABELS,
                                 batch_size=32,
                                 # class_weight=CLASS_WEIGHTS,
                                 epochs=1,
                                 verbose=0)
-            
             time.sleep(0.001)
-                
-                
-                
-                # self.nn_data.update_results(output_result[0])
-            # else:
-            #     time.sleep(0.01)
             
     def predict(self):
         while True:
@@ -124,62 +110,4 @@ class NeuralNetModel:
                 # print("Pre: " + str(pre_diff) + "   Post: " + str(post_diff))
                 self.nn_data.update_results(output[:,1])
                 self.nn_plot.update([self.nn_data.output_results])
-                
-
-            # INPUT_DATA = self.nn_data.input_data[:1]
-            # INPUT_MEMORY = self.nn_data.input_memory[:1]
-            # OUTPUT_LABELS = self.nn_data.output_labels[:1]
-            # if np.sum(OUTPUT_LABELS[:,1]) == 1:
-            # output = self.model.predict([INPUT_DATA, INPUT_MEMORY], 32, verbose=0)
-            # print(self.nn_data.count)
-            # self.nn_data.update_results(output[0][1])
-            # else:
             time.sleep(0.01)
-
-
-    
-    # def infer(self, input_data_window, input_memory_window):
-    #     return self.model.predict([input_data_window, input_memory_window], 1)
-
-
-# history = self.model.fit([INPUT_DATA, INPUT_MEMORY],
-            #                     OUTPUT_LABELS,
-            #                     batch_size=32,
-            #                     # class_weight=CLASS_WEIGHTS,
-            #                     epochs=1)
-
-# loss = history.history['loss']
-# plt.plot(range(len(loss)), loss)
-# plt.ylim([0, 0.35])
-# plt.show()
-
-# def assess(MODEL, INPUT_DATA, INPUT_MEMORY, OUTPUT_LABELS):
-#     predicted_output = MODEL.predict([INPUT_DATA, INPUT_MEMORY])
-#     actual_output = OUTPUT_LABELS
-
-#     for i in range(OUTPUT_LABELS.shape[1]):
-#         print()
-#         print('Confusion Matrix: ' + str(i))
-#         print(confusion_matrix(actual_output[:, i], np.around(predicted_output[:, i])))
-#         plt.scatter(predicted_output[:, i], actual_output[:, i], alpha=.005)
-#         plt.show()
-#         print()
-
-    # print()
-    # print('Confusion Matrix: 0')
-    # print(confusion_matrix(actual_output[:, 0], np.around(predicted_output[:, 0])))
-    # plt.scatter(predicted_output[:, 0], actual_output[:, 0], alpha=.005)
-    # plt.show()
-    # print()
-
-
-# def save(MODEL, session, parts):
-#     directory = '/Users/admin/data/laef/recordings/'
-#     path = directory + session + '/NN/NN_Firefly'
-#     path += "".join(["_" + p for p in parts])
-
-#     MODEL.save(path)
-
-#     MODEL_COREML = ct.convert(MODEL)
-#     MODEL_COREML.save(path + '.mlmodel')
-#     print("Model Saved!")
