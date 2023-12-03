@@ -7,11 +7,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 # import coremltools as ct
 import time
+import threading
 
 
 class NeuralNetData:
     def __init__(self, n_samples, n_input_frames, n_memory_frames, labeling_delay, n_features=3, n_labels=2):
-        
         self.batch_size = 16
         self.batch_count = 0
         self.count = 0
@@ -26,7 +26,7 @@ class NeuralNetData:
         self.input_data = np.zeros((n_samples, n_input_frames, n_features), dtype=np.float32)
         self.input_memory = np.zeros((n_samples, n_memory_frames, 1), dtype=np.float32)
         self.output_labels = np.zeros((n_samples, n_labels), dtype=np.float32)
-        self.output_results = np.zeros((n_samples), dtype=np.float32)
+        self.output_results = np.full((n_samples), 0.5, dtype=np.float32)
     
     def update(self, input_data_window, input_memory_window, output_labels):
         self.count += 1
@@ -55,8 +55,59 @@ class NeuralNetModel:
     def __init__(self, nn_data, nn_plot):
         self.nn_data = nn_data
         self.nn_plot = nn_plot
+
+        self.run_training = False
+        self.run_inference = False
+
         self.model = self.build()
-        
+
+    
+    def start_training(self):
+        self.run_training = True
+        self.training_thread = threading.Thread(target=self.training, daemon=True)
+        self.training_thread.start()
+
+    def stop_training(self):
+        self.run_training = False
+
+    def start_inference(self):
+        self.run_inference = True
+        self.inference_thread = threading.Thread(target=self.inference, daemon=True)
+        self.inference_thread.start()
+
+    def stop_inference(self):
+        self.run_inference = False
+
+
+    def training(self):
+        while self.run_training:
+            INPUT_DATA = self.nn_data.input_data
+            INPUT_MEMORY = self.nn_data.input_memory
+            OUTPUT_LABELS = self.nn_data.output_labels
+            self.model.fit([INPUT_DATA, INPUT_MEMORY],
+                                OUTPUT_LABELS,
+                                batch_size=32,
+                                epochs=1,
+                                verbose=0)
+            time.sleep(0.001)
+
+
+    def inference(self):
+        while self.run_inference:
+            count = self.nn_data.batch_count
+            size = self.nn_data.batch_size
+            if count >= size:
+                pre_diff = count - size
+                self.nn_data.batch_count = pre_diff
+                INPUT_DATA = self.nn_data.input_data[pre_diff:pre_diff+size]
+                INPUT_MEMORY = self.nn_data.input_memory[pre_diff:pre_diff+size]
+                output = self.model.predict([INPUT_DATA, INPUT_MEMORY], size, verbose=0)
+                # post_diff = self.nn_data.batch_count
+                # print("PRE: ", pre_diff, "POST: ", post_diff)
+                self.nn_data.update_results(output[:,1])
+                self.nn_plot.update([self.nn_data.output_results])
+            time.sleep(0.01)
+
 
     def build(self):
         INPUT_DATA = self.nn_data.input_data
@@ -80,34 +131,3 @@ class NeuralNetModel:
         MODEL.summary()
 
         return MODEL
-
-
-    def train(self): #CLASS_WEIGHTS
-        
-        while(True):
-            INPUT_DATA = self.nn_data.input_data
-            INPUT_MEMORY = self.nn_data.input_memory
-            OUTPUT_LABELS = self.nn_data.output_labels
-            self.model.fit([INPUT_DATA, INPUT_MEMORY],
-                                OUTPUT_LABELS,
-                                batch_size=32,
-                                # class_weight=CLASS_WEIGHTS,
-                                epochs=1,
-                                verbose=0)
-            time.sleep(0.001)
-            
-    def predict(self):
-        while True:
-            count = self.nn_data.batch_count
-            size = self.nn_data.batch_size
-            if count >= size:
-                pre_diff = count - size
-                self.nn_data.batch_count = pre_diff
-                INPUT_DATA = self.nn_data.input_data[pre_diff:pre_diff+size]
-                INPUT_MEMORY = self.nn_data.input_memory[pre_diff:pre_diff+size]
-                output = self.model.predict([INPUT_DATA, INPUT_MEMORY], size, verbose=0)
-                post_diff = self.nn_data.batch_count
-                # print("Pre: " + str(pre_diff) + "   Post: " + str(post_diff))
-                self.nn_data.update_results(output[:,1])
-                self.nn_plot.update([self.nn_data.output_results])
-            time.sleep(0.01)
