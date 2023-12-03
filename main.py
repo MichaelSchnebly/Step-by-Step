@@ -71,6 +71,7 @@ class Hotkeys:
         if key == glfw.KEY_2 and action == glfw.PRESS:
             print("2: ACC_MAG")
             self.MAGNITUDE = not self.MAGNITUDE
+
         if key == glfw.KEY_3 and action == glfw.PRESS:
             print("3: METRONOME")
             self.METRONOME = not self.METRONOME
