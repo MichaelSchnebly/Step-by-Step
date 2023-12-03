@@ -23,10 +23,13 @@ FPS = 0
 
 # HOTKEY CONDITIONALS
 class Hotkeys:
-    def __init__(self, nn_model):
+    def __init__(self, imu_stream, nn_model):
         self.PAUSE = False
-        self.ACC_XYZ = False
-        self.ACC_MAG = False
+
+        self.imu_stream = imu_stream
+        self.IMU_STREAM = False
+        self.MAGNITUDE = False
+
         self.METRONOME = False
         self.LABELLING = False
 
@@ -43,20 +46,28 @@ class Hotkeys:
         if key == glfw.KEY_SPACE and action == glfw.PRESS:
             self.PAUSE = not self.PAUSE
             if self.PAUSE:
-                print("Pausing...")
+                print("Pausing Application...")
                 self.nn_model.stop_training()
                 self.nn_model.stop_inference()
+                self.imu_stream.stop()
             else:
-                print("Starting...")
+                print("Starting Application...")
                 self.nn_model.start_training()
                 self.nn_model.start_inference()
+                self.imu_stream.start()
             
         if key == glfw.KEY_1 and action == glfw.PRESS:
-            print("1: ACC_XYZ")
-            self.ACC_XYZ = not self.ACC_XYZ
+            self.IMU_STREAM = not self.IMU_STREAM
+            if self.IMU_STREAM:
+                print("Starting IMU Stream...")
+                self.imu_stream.start()
+            else:
+                print("Stopping IMU Stream...")
+                self.imu_stream.stop()
+
         if key == glfw.KEY_2 and action == glfw.PRESS:
             print("2: ACC_MAG")
-            self.ACC_MAG = not self.ACC_MAG
+            self.MAGNITUDE = not self.MAGNITUDE
         if key == glfw.KEY_3 and action == glfw.PRESS:
             print("3: METRONOME")
             self.METRONOME = not self.METRONOME
@@ -90,8 +101,8 @@ class Hotkeys:
 
     def reset(self):
         self.PAUSE = False
-        self.ACC_XYZ = False
-        self.ACC_MAG = False
+        self.IMU_STREAM = False
+        self.MAGNITUDE = False
         self.METRONOME = False
         self.LABELLING = False
         self.NN_INFERENCE = False
@@ -201,13 +212,6 @@ def main():
 
     gesture_data = GestureData(N_FRAMES)
 
-
-
-    # nn_training_thread = threading.Thread(target=nn_model.training, daemon=True)
-    # nn_inference_thread = threading.Thread(target=nn_model.inference, daemon=True)
-        
-    
-
     nn_plot = NNPlot(N_FRAMES)
     nn_data = NeuralNetData(N_FRAMES, N_INPUT_FRAMES, N_MEMORY_FRAMES, gesture_data.peak_idx)
     nn_model = NeuralNetModel(nn_data, nn_plot)
@@ -216,7 +220,7 @@ def main():
 
     renderers = [EventRenderer(event_plot.lines), IMURenderer(imu_plot.lines), NNRenderer(nn_plot.lines)]
 
-    HOTKEYS = Hotkeys(nn_model)
+    HOTKEYS = Hotkeys(imu_stream, nn_model)
     glfw.set_key_callback(window, HOTKEYS.update)
 
     while not glfw.window_should_close(window):
@@ -230,9 +234,10 @@ def main():
         else:
             glfw.wait_events()
     
-    imu_stream.close()
+    
     nn_model.stop_training()
     nn_model.stop_inference()
+    imu_stream.stop()
     glfw.terminate()
 
 if __name__ == "__main__":

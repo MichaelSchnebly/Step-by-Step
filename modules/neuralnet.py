@@ -69,6 +69,7 @@ class NeuralNetModel:
 
     def stop_training(self):
         self.run_training = False
+        self.training_thread.join()
 
     def start_inference(self):
         self.run_inference = True
@@ -77,6 +78,7 @@ class NeuralNetModel:
 
     def stop_inference(self):
         self.run_inference = False
+        self.inference_thread.join()
 
 
     def training(self):
