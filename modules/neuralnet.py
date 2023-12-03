@@ -63,23 +63,26 @@ class NeuralNetModel:
 
     
     def start_training(self):
-        self.run_training = True
-        self.training_thread = threading.Thread(target=self.training, daemon=True)
-        self.training_thread.start()
+        if not self.run_training:
+            self.run_training = True
+            self.training_thread = threading.Thread(target=self.training, daemon=True)
+            self.training_thread.start()
 
     def stop_training(self):
-        self.run_training = False
-        self.training_thread.join()
+        if self.run_training:
+            self.run_training = False
+            self.training_thread.join()
 
     def start_inference(self):
-        self.run_inference = True
-        self.inference_thread = threading.Thread(target=self.inference, daemon=True)
-        self.inference_thread.start()
+        if not self.run_inference:
+            self.run_inference = True
+            self.inference_thread = threading.Thread(target=self.inference, daemon=True)
+            self.inference_thread.start()
 
     def stop_inference(self):
-        self.run_inference = False
-        self.inference_thread.join()
-
+        if self.run_inference:
+            self.run_inference = False
+            self.inference_thread.join()
 
     def training(self):
         while self.run_training:

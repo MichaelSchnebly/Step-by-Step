@@ -18,16 +18,18 @@ class IMUStream:
         self.running = False
 
     def start(self):
-        self.running = True
-        if self.read_file_flag:
-            self.thread = threading.Thread(target=self.read_file, daemon=True)
-        else:
-            self.thread = threading.Thread(target=self.read_serial, daemon=True)
-        self.thread.start()
+        if not self.running:
+            self.running = True
+            if self.read_file_flag:
+                self.thread = threading.Thread(target=self.read_file, daemon=True)
+            else:
+                self.thread = threading.Thread(target=self.read_serial, daemon=True)
+            self.thread.start()
 
     def stop(self):
-        self.running = False
-        self.thread.join()
+        if self.running:
+            self.running = False
+            self.thread.join()
 
     def read_serial(self):
         if self.record:

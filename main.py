@@ -52,9 +52,12 @@ class Hotkeys:
                 self.imu_stream.stop()
             else:
                 print("Starting Application...")
-                self.nn_model.start_training()
-                self.nn_model.start_inference()
-                self.imu_stream.start()
+                if self.IMU_STREAM:
+                    self.imu_stream.start()
+                if self.NN_INFERENCE:
+                    self.nn_model.start_inference()
+                if self.NN_TRAINING:    
+                    self.nn_model.start_training()
             
         if key == glfw.KEY_1 and action == glfw.PRESS:
             self.IMU_STREAM = not self.IMU_STREAM
@@ -211,6 +214,7 @@ def main():
     metronome = Metronome(N_FRAMES, 60)
 
     gesture_data = GestureData(N_FRAMES)
+
 
     nn_plot = NNPlot(N_FRAMES)
     nn_data = NeuralNetData(N_FRAMES, N_INPUT_FRAMES, N_MEMORY_FRAMES, gesture_data.peak_idx)
