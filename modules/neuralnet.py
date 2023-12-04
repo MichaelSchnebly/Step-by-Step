@@ -136,6 +136,6 @@ class NeuralNetModel:
         MODEL.compile(loss=CategoricalCrossentropy(), optimizer=OPT, metrics=["categorical_accuracy"])
         MODEL.summary()
 
-        plot_model(MODEL, to_file='/images/model_diagram.svg', show_shapes=True, dpi = 60)
+        # plot_model(MODEL, to_file='images/model_diagram.svg', show_shapes=True, dpi = 60)
 
         return MODEL

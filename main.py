@@ -64,7 +64,7 @@ def init_ui(window):
     
     #change imgui global scale
     io = imgui.get_io()
-    io.font_global_scale = 1.0
+    io.font_global_scale = 4.0
     return impl
 
 
@@ -117,7 +117,7 @@ def main():
         raise Exception("GLFW can't be initialized")
     
     window = init_window()
-    impl = init_ui(window)
+    # impl = init_ui(window)
     init_gl()
 
     imu_plot = IMUPlot(N_FRAMES)
@@ -147,7 +147,7 @@ def main():
         if not HOTKEYS.PAUSE:
             glfw.poll_events()
             glClear(GL_COLOR_BUFFER_BIT)
-            update_ui(impl)
+            # update_ui(impl)
 
             update_data(imu_stream, imu_data, imu_plot, window, metronome, event_plot, gesture_data, nn_data, nn_plot)
             event_renderer.render()
