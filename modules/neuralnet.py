@@ -10,6 +10,8 @@ import numpy as np
 import time
 import threading
 
+import simpleaudio as sa
+
 
 class NeuralNetData:
     def __init__(self, n_samples, n_input_frames, n_memory_frames, labeling_delay, n_features=3, n_labels=2):
@@ -27,6 +29,8 @@ class NeuralNetData:
         self.input_memory = np.zeros((n_samples, n_memory_frames, 1), dtype=np.float32)
         self.output_labels = np.zeros((n_samples, n_labels), dtype=np.float32)
         self.output_results = np.full((n_samples), 0.5, dtype=np.float32)
+
+        self.high_beat = sa.WaveObject.from_wave_file("sounds/metronome_hi.wav")
     
     def update(self, input_data_window, input_memory_window, output_labels):
         self.batch_count += 1
@@ -112,6 +116,8 @@ class NeuralNetModel:
                 # print("PRE: ", pre_diff, "POST: ", post_diff)
                 self.nn_data.update_results(output[:,1])
                 self.nn_plot.update([self.nn_data.output_results])
+                if np.sum(output[:,1] > 0.5) > 0:
+                    self.nn_data.high_beat.play()
             time.sleep(0.01)
 
 

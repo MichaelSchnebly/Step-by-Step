@@ -106,6 +106,9 @@ def update_data(imu_stream, imu_data, imu_plot, window, metronome, event_plot, g
                        gesture_data.labels[i,:])
         nn_plot.shift()
 
+        if gesture_data.labels[gesture_data.peak_idx,1] == 1:
+            metronome.low_beat.play()
+
 
         if FPS:
             glfw.set_window_title(window, TITLE + "   ---   " + f"FPS: {FPS:.2f}")

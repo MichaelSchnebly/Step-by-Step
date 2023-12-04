@@ -15,7 +15,7 @@ class EventPlot:
     '''
     def __init__(self, n_frames):
         self.lines = [EventLines(n_frames, 0.01, np.array([0.2, 0.2,  0.2, 1]), [1, 1, 1], [0, -1, 0]), #metronome
-                      EventLines(n_frames, 0.01, np.array([1.0, 0.0,  0.0, 1]), [1, 1, 1], [0, -1, 0])] #label
+                      EventLines(n_frames, 0.01, np.array([0.3, 0.3, 0.3, 1]), [1, 1, 1], [0, -1, 0])] #label
 
     def update(self, events):
         self.lines[0].update(events[0])
@@ -141,7 +141,7 @@ class IMUPlot:
         self.lines = [IMULine(n_frames, 0.003, np.array([0, 1,   1, 1]), [1, 1/12, 1], [0, -7/12, 0], False), #acceleration.x
                           IMULine(n_frames, 0.003, np.array([1, 0,   1, 1]), [1, 1/12, 1], [0, -9/12, 0], False), #acceleration.y
                           IMULine(n_frames, 0.003, np.array([1, 0.6, 0, 1]), [1, 1/12, 1], [0, -11/12, 0], False), #acceleration.z
-                          IMULine(n_frames, 0.006, np.array([1, 1,   1, 1]), [1, 1/3, 1], [0, -6/12, 0], False) #acceleration.mag
+                          IMULine(n_frames, 0.006, np.array([0.5, 0.5, 0.5, 1]), [1, 1/3, 1], [0, -6/12, 0], False) #acceleration.mag
                           ]
     
     def update(self, data):
