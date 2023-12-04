@@ -23,19 +23,23 @@ FPS = 0
 
 # HOTKEY CONDITIONALS
 class Hotkeys:
-    def __init__(self, imu_stream, metronome, nn_model):
+    def __init__(self, imu_stream, imu_plot, metronome, gesture_data, nn_model, nn_plot):
         self.PAUSE = False
 
         self.imu_stream = imu_stream
         self.IMU_STREAM = False
+
+        self.imu_plot = imu_plot
         self.MAGNITUDE = False
 
         self.metronome = metronome
         self.METRONOME = False
 
-        self.LABELLING = False
+        self.gesture_data = gesture_data
+        self.LABELING = False
 
         self.nn_model = nn_model
+        self.nn_plot = nn_plot
         self.NN_INFERENCE = False
         self.NN_TRAINING = False
 
@@ -48,13 +52,13 @@ class Hotkeys:
         if key == glfw.KEY_SPACE and action == glfw.PRESS:
             self.PAUSE = not self.PAUSE
             if self.PAUSE:
-                print("Pausing Application...")
+                print("SPACE: Pausing Application...")
                 self.nn_model.stop_training()
                 self.nn_model.stop_inference()
                 self.imu_stream.stop()
                 self.metronome.stop()
             else:
-                print("Starting Application...")
+                print("SPACE: Starting Application...")
                 if self.METRONOME:
                     self.metronome.start()
                 if self.IMU_STREAM:
@@ -67,15 +71,26 @@ class Hotkeys:
         if key == glfw.KEY_1 and action == glfw.PRESS:
             self.IMU_STREAM = not self.IMU_STREAM
             if self.IMU_STREAM:
-                print("Starting IMU Stream...")
+                print("1: Starting IMU Stream...")
                 self.imu_stream.start()
+                self.imu_plot.lines[0].start()
+                self.imu_plot.lines[1].start()
+                self.imu_plot.lines[2].start()
             else:
-                print("Stopping IMU Stream...")
+                print("1: Stopping IMU Stream...")
                 self.imu_stream.stop()
+                self.imu_plot.lines[0].stop()
+                self.imu_plot.lines[1].stop()
+                self.imu_plot.lines[2].stop()
 
         if key == glfw.KEY_2 and action == glfw.PRESS:
-            print("2: ACC_MAG")
             self.MAGNITUDE = not self.MAGNITUDE
+            if self.MAGNITUDE:
+                print("2: Starting Magnitude Plot...")
+                self.imu_plot.lines[3].start()
+            else:
+                print("2: Stopping Magnitude Plot...")
+                self.imu_plot.lines[3].stop()
 
         if key == glfw.KEY_3 and action == glfw.PRESS:
             self.METRONOME = not self.METRONOME
@@ -87,15 +102,22 @@ class Hotkeys:
                 self.metronome.stop()
 
         if key == glfw.KEY_4 and action == glfw.PRESS:
-            print("4: LABELLING")
-            self.LABELLING = not self.LABELLING
+            self.LABELING = not self.LABELING
+            if self.LABELING:
+                print("4: Starting Labeling...")
+                self.gesture_data.start_labeling()
+            else:
+                print("4: Stopping Labeling...")
+                self.gesture_data.stop_labeling()
 
         if key == glfw.KEY_5 and action == glfw.PRESS:
             self.NN_INFERENCE = not self.NN_INFERENCE
             if self.NN_INFERENCE:
                 self.nn_model.start_inference()
+                self.nn_plot.lines[0].start()
             else:
                 self.nn_model.stop_inference()
+                self.nn_plot.lines[0].stop()
             print("5: NN_INFERENCE " + str(self.NN_INFERENCE))
 
         if key == glfw.KEY_6 and action == glfw.PRESS:
@@ -106,23 +128,24 @@ class Hotkeys:
                 self.nn_model.stop_training()
             print("6: NN_TRAINING " + str(self.NN_TRAINING))
 
-
         if key == glfw.KEY_7 and action == glfw.PRESS:
             print("7: Exporting model...")
             self.EXPORT = not self.EXPORT
-        if key == glfw.KEY_R and action == glfw.PRESS:
-            print("R: Resetting...")
-            self.reset()
 
-    def reset(self):
-        self.PAUSE = False
-        self.IMU_STREAM = False
-        self.MAGNITUDE = False
-        self.METRONOME = False
-        self.LABELLING = False
-        self.NN_INFERENCE = False
-        self.NN_TRAINING = False
-        self.EXPORT = False
+    #     if key == glfw.KEY_R and action == glfw.PRESS:
+    #         print("R: Resetting...")
+    #         self.reset()
+
+    # def reset(self):
+    #     self.PAUSE = False
+    #     self.IMU_STREAM = False
+    #     self.MAGNITUDE = False
+    #     self.METRONOME = False
+    #     self.LABELING = False
+    #     self.NN_INFERENCE = False
+    #     self.NN_TRAINING = False
+    #     self.EXPORT = False
+
 
 def init_window():
     """Initializes and returns a GLFW window."""
@@ -142,6 +165,7 @@ def init_window():
     
     glfw.make_context_current(window)
     return window
+
 
 def init_gl():
     """Initializes OpenGL state."""
@@ -176,14 +200,14 @@ def update_ui(impl):
 
 def update_data(imu_stream, imu_data, imu_plot, window, metronome, event_plot, gesture_data, nn_data, nn_plot):
     while not imu_stream.data_queue.empty():
+
         frame, FPS = imu_stream.get_frame()
-
         imu_data.update(frame[0]) #acceleration.x, acceleration.y, acceleration.z
-        imu_plot.update(frame[0])
-
+        imu_plot.update(frame[0]) #acceleration.x, acceleration.y, acceleration.z
         gesture_data.update(np.linalg.norm(frame[0])) #acceleration.mag
-        metronome.update()
 
+        metronome.update()
+        
         event_plot.update([metronome.beats, gesture_data.labels[:,1]])
 
         i = gesture_data.peak_idx
@@ -231,7 +255,7 @@ def main():
     imu_renderer = IMURenderer(imu_plot.lines)
     nn_renderer = NNRenderer(nn_plot.lines)
 
-    HOTKEYS = Hotkeys(imu_stream, metronome, nn_model)
+    HOTKEYS = Hotkeys(imu_stream, imu_plot, metronome, gesture_data, nn_model, nn_plot)
     glfw.set_key_callback(window, HOTKEYS.update)
 
     while not glfw.window_should_close(window):

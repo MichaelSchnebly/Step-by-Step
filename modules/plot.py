@@ -25,9 +25,9 @@ class EventPlot:
 class EventLines:
     '''A class to visually indicate events in timeseries with vertical lines.
     '''
-    def __init__(self, n_frames, width = 0.002, color = np.ones(4, dtype=np.float32), scale = [1, 1, 1], translate = [0, 0, 0]):
+    def __init__(self, n_frames, width = 0.002, color = np.ones(4, dtype=np.float32), scale = [1, 1, 1], translate = [0, 0, 0], running = True):
         self.x = np.linspace(-1, 1, n_frames, dtype=np.float32)
-        self.vertices = np.zeros(1, dtype=np.float32)
+        self.vertices = np.zeros(0, dtype=np.float32)
 
         self.width = width
         self.color = color
@@ -37,16 +37,25 @@ class EventLines:
     
         self.vbo = vbo.VBO(self.vertices)
 
+        self.running = running
+
+    def start(self):
+        self.running = True
+
+    def stop(self):
+        self.running = False
+
     def update(self, events_onehot):
-        events = np.argwhere(events_onehot == True)
-        events = events.reshape(events.shape[0])
-        self.vertices = np.zeros((events.shape[0]), dtype=np.float32)
-        self.vertices = self.x[events]
-        self.vbo.set_array(self.vertices)
+        if self.running:
+            events = np.argwhere(events_onehot == True)
+            events = events.reshape(events.shape[0])
+            self.vertices = np.zeros((events.shape[0]), dtype=np.float32)
+            self.vertices = self.x[events]
+            self.vbo.set_array(self.vertices)
 
         
 class NNLine:
-    def __init__(self, n_frames, width = 0.002, color = np.ones(4, dtype=np.float32), scale = [1, 1, 1], translate = [0, 0, 0]):
+    def __init__(self, n_frames, width = 0.002, color = np.ones(4, dtype=np.float32), scale = [1, 1, 1], translate = [0, 0, 0], running = True):
         self.vertices = np.zeros((n_frames, 3), dtype=np.float32)
         self.vertices[:, 0] = np.linspace(-1, 1, n_frames, dtype=np.float32)
         self.vertices[:, 1] = np.zeros(n_frames, dtype=np.float32)
@@ -60,20 +69,28 @@ class NNLine:
     
         self.vbo = vbo.VBO(self.vertices)
 
+        self.running = running
+
+    def start(self):
+        self.running = True
+
+    def stop(self):
+        self.running = False
+
     def update(self, values):
-        # self.vertices[1:, 1] = self.vertices[:-1, 1]
-        # self.vertices[0, 1] = value
-        self.vertices[:, 1] = values
-        self.vbo.set_array(self.vertices)
+        if self.running:
+            self.vertices[:, 1] = values
+            self.vbo.set_array(self.vertices)
 
     def shift(self):
-        self.vertices[1:, 1] = self.vertices[:-1, 1]
-        self.vertices[0, 1] = 0
-        self.vbo.set_array(self.vertices)
+        if self.running:
+            self.vertices[1:, 1] = self.vertices[:-1, 1]
+            self.vertices[0, 1] = 0
+            self.vbo.set_array(self.vertices)
 
 class NNPlot:
     def __init__(self, n_frames):
-        self.lines = [NNLine(n_frames, 0.006, np.array([1, 1,  1, 1]), [1, 1, 1], [0, 0, 0])]
+        self.lines = [NNLine(n_frames, 0.006, np.array([1, 1,  1, 1]), [1, 1, 1], [0, 0, 0], False)]
     
     def update(self, values):
         self.lines[0].update(values[0])
@@ -83,7 +100,7 @@ class NNPlot:
 
 
 class IMULine:
-    def __init__(self, n_frames, width = 0.002, color = np.ones(4, dtype=np.float32), scale = [1, 1, 1], translate = [0, 0, 0]):
+    def __init__(self, n_frames, width = 0.002, color = np.ones(4, dtype=np.float32), scale = [1, 1, 1], translate = [0, 0, 0], running = True):
         self.vertices = np.zeros((n_frames, 3), dtype=np.float32)
         self.vertices[:, 0] = np.linspace(-1, 1, n_frames, dtype=np.float32)
         self.vertices[:, 1] = np.zeros(n_frames, dtype=np.float32)
@@ -97,10 +114,19 @@ class IMULine:
     
         self.vbo = vbo.VBO(self.vertices)
 
+        self.running = running
+
+    def start(self):
+        self.running = True
+
+    def stop(self):
+        self.running = False
+
     def update(self, value):
-        self.vertices[1:, 1] = self.vertices[:-1, 1]
-        self.vertices[0, 1] = value
-        self.vbo.set_array(self.vertices)
+        if self.running:
+            self.vertices[1:, 1] = self.vertices[:-1, 1]
+            self.vertices[0, 1] = value
+            self.vbo.set_array(self.vertices)
 
 
 class IMUPlot:
@@ -112,10 +138,10 @@ class IMUPlot:
         -The renderer is stored as a IMURenderer object.
     '''
     def __init__(self, n_frames):
-        self.lines = [IMULine(n_frames, 0.003, np.array([0, 1,   1, 1]), [1, 1/12, 1], [0, -7/12, 0]), #acceleration.x
-                          IMULine(n_frames, 0.003, np.array([1, 0,   1, 1]), [1, 1/12, 1], [0, -9/12, 0]), #acceleration.y
-                          IMULine(n_frames, 0.003, np.array([1, 0.6, 0, 1]), [1, 1/12, 1], [0, -11/12, 0]), #acceleration.z
-                          IMULine(n_frames, 0.006, np.array([1, 1,   1, 1]), [1, 1/3, 1], [0, -6/12, 0]) #acceleration.mag
+        self.lines = [IMULine(n_frames, 0.003, np.array([0, 1,   1, 1]), [1, 1/12, 1], [0, -7/12, 0], False), #acceleration.x
+                          IMULine(n_frames, 0.003, np.array([1, 0,   1, 1]), [1, 1/12, 1], [0, -9/12, 0], False), #acceleration.y
+                          IMULine(n_frames, 0.003, np.array([1, 0.6, 0, 1]), [1, 1/12, 1], [0, -11/12, 0], False), #acceleration.z
+                          IMULine(n_frames, 0.006, np.array([1, 1,   1, 1]), [1, 1/3, 1], [0, -6/12, 0], False) #acceleration.mag
                           ]
     
     def update(self, data):

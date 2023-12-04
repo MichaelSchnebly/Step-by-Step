@@ -31,22 +31,32 @@ class EventRenderer:
         glUseProgram(0)
         glBindVertexArray(0)
 
+        self.running = True
+
+    def start(self):
+        self.running = True
+
+    def stop(self):
+        self.running = False
+
     def render(self):
-        for line in self.lines:
-            glUseProgram(self.shader)
-            glBindVertexArray(self.vao)
+        if self.running:
+            for line in self.lines:
+                if line.running:
+                    glUseProgram(self.shader)
+                    glBindVertexArray(self.vao)
 
-            line.vbo.bind()
-            glEnableVertexAttribArray(0)
-            glVertexAttribPointer(0, 1, GL_FLOAT, GL_FALSE, 0, None)
+                    line.vbo.bind()
+                    glEnableVertexAttribArray(0)
+                    glVertexAttribPointer(0, 1, GL_FLOAT, GL_FALSE, 0, None)
 
-            glUniformMatrix4fv(self.transform_loc, 1, GL_FALSE, line.transform)
-            # glUniform1f(self.width_loc, line.width)
-            glUniform4fv(self.color_loc, 1, line.color)
+                    glUniformMatrix4fv(self.transform_loc, 1, GL_FALSE, line.transform)
+                    # glUniform1f(self.width_loc, line.width)
+                    glUniform4fv(self.color_loc, 1, line.color)
 
-            glDrawArrays(GL_POINTS, 0, line.vertices.shape[0])
+                    glDrawArrays(GL_POINTS, 0, line.vertices.shape[0])
 
-            line.vbo.unbind()
+                    line.vbo.unbind()
 
 class IMURenderer:
     def __init__(self, lines):
@@ -69,22 +79,32 @@ class IMURenderer:
         glUseProgram(0)
         glBindVertexArray(0)
 
+        self.running = True
+
+    def start(self):
+        self.running = True
+
+    def stop(self):
+        self.running = False
+
     def render(self):
-        for line in self.lines:
-            glUseProgram(self.shader)
-            glBindVertexArray(self.vao)
+        if self.running:
+            for line in self.lines:
+                if line.running:
+                    glUseProgram(self.shader)
+                    glBindVertexArray(self.vao)
 
-            line.vbo.bind()
-            glEnableVertexAttribArray(0)
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, None)
+                    line.vbo.bind()
+                    glEnableVertexAttribArray(0)
+                    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, None)
 
-            glUniformMatrix4fv(self.transform_loc, 1, GL_FALSE, line.transform)
-            glUniform1f(self.width_loc, line.width)
-            glUniform4fv(self.color_loc, 1, line.color)
+                    glUniformMatrix4fv(self.transform_loc, 1, GL_FALSE, line.transform)
+                    glUniform1f(self.width_loc, line.width)
+                    glUniform4fv(self.color_loc, 1, line.color)
 
-            glDrawArrays(GL_LINE_STRIP_ADJACENCY, 0, line.vertices.shape[0])
+                    glDrawArrays(GL_LINE_STRIP_ADJACENCY, 0, line.vertices.shape[0])
 
-            line.vbo.unbind()
+                    line.vbo.unbind()
 
 def load_shader(shader_file, shader_type):
     with open(shader_file, 'r') as file:
@@ -124,19 +144,29 @@ class NNRenderer:
         glUseProgram(0)
         glBindVertexArray(0)
 
+        self.running = True
+
+    def start(self):
+        self.running = True
+
+    def stop(self):
+        self.running = False
+
     def render(self):
-        for line in self.lines:
-            glUseProgram(self.shader)
-            glBindVertexArray(self.vao)
+        if self.running:
+            for line in self.lines:
+                if line.running:
+                    glUseProgram(self.shader)
+                    glBindVertexArray(self.vao)
 
-            line.vbo.bind()
-            glEnableVertexAttribArray(0)
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, None)
+                    line.vbo.bind()
+                    glEnableVertexAttribArray(0)
+                    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, None)
 
-            glUniformMatrix4fv(self.transform_loc, 1, GL_FALSE, line.transform)
-            glUniform1f(self.width_loc, line.width)
-            glUniform4fv(self.color_loc, 1, line.color)
+                    glUniformMatrix4fv(self.transform_loc, 1, GL_FALSE, line.transform)
+                    glUniform1f(self.width_loc, line.width)
+                    glUniform4fv(self.color_loc, 1, line.color)
 
-            glDrawArrays(GL_LINE_STRIP_ADJACENCY, 0, line.vertices.shape[0])
+                    glDrawArrays(GL_LINE_STRIP_ADJACENCY, 0, line.vertices.shape[0])
 
-            line.vbo.unbind()
+                    line.vbo.unbind()

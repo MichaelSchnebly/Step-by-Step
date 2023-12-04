@@ -14,7 +14,6 @@ class NeuralNetData:
     def __init__(self, n_samples, n_input_frames, n_memory_frames, labeling_delay, n_features=3, n_labels=2):
         self.batch_size = 16
         self.batch_count = 0
-        self.count = 0
 
         self.n_samples = n_samples
         self.n_input_frames = n_input_frames
@@ -29,7 +28,6 @@ class NeuralNetData:
         self.output_results = np.full((n_samples), 0.5, dtype=np.float32)
     
     def update(self, input_data_window, input_memory_window, output_labels):
-        self.count += 1
         self.batch_count += 1
         self.input_data[1:, :, :] = self.input_data[:-1, :, :]
         self.input_data[0, :, :] = input_data_window
@@ -98,6 +96,8 @@ class NeuralNetModel:
 
 
     def inference(self):
+        self.nn_data.batch_count = 0
+        
         while self.run_inference:
             count = self.nn_data.batch_count
             size = self.nn_data.batch_size
