@@ -124,8 +124,9 @@ def load_shader(shader_file, shader_type):
 
 
 class NNRenderer:
-    def __init__(self, lines):
+    def __init__(self, lines, delay):
         self.lines = lines
+        self.delay = delay
 
         self.vao = glGenVertexArrays(1)
         glBindVertexArray(self.vao)
@@ -167,6 +168,6 @@ class NNRenderer:
                     glUniform1f(self.width_loc, line.width)
                     glUniform4fv(self.color_loc, 1, line.color)
 
-                    glDrawArrays(GL_LINE_STRIP_ADJACENCY, 0, line.vertices.shape[0])
+                    glDrawArrays(GL_LINE_STRIP_ADJACENCY, self.delay, line.vertices.shape[0] - self.delay)
 
                     line.vbo.unbind()

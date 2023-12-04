@@ -92,7 +92,7 @@ class Hotkeys:
                 print("2: Stopping Magnitude Plot...")
                 self.imu_plot.lines[3].stop()
 
-        if key == glfw.KEY_3 and action == glfw.PRESS:
+        if key == glfw.KEY_M and action == glfw.PRESS:
             self.METRONOME = not self.METRONOME
             if self.METRONOME:
                 print("Starting Metronome...")
@@ -101,7 +101,7 @@ class Hotkeys:
                 print("Stopping Metronome...")
                 self.metronome.stop()
 
-        if key == glfw.KEY_4 and action == glfw.PRESS:
+        if key == glfw.KEY_3 and action == glfw.PRESS:
             self.LABELING = not self.LABELING
             if self.LABELING:
                 print("4: Starting Labeling...")
@@ -110,7 +110,7 @@ class Hotkeys:
                 print("4: Stopping Labeling...")
                 self.gesture_data.stop_labeling()
 
-        if key == glfw.KEY_5 and action == glfw.PRESS:
+        if key == glfw.KEY_4 and action == glfw.PRESS:
             self.NN_INFERENCE = not self.NN_INFERENCE
             if self.NN_INFERENCE:
                 self.nn_model.start_inference()
@@ -120,7 +120,7 @@ class Hotkeys:
                 self.nn_plot.lines[0].stop()
             print("5: NN_INFERENCE " + str(self.NN_INFERENCE))
 
-        if key == glfw.KEY_6 and action == glfw.PRESS:
+        if key == glfw.KEY_5 and action == glfw.PRESS:
             self.NN_TRAINING = not self.NN_TRAINING
             if self.NN_TRAINING:
                 self.nn_model.start_training()
@@ -128,9 +128,9 @@ class Hotkeys:
                 self.nn_model.stop_training()
             print("6: NN_TRAINING " + str(self.NN_TRAINING))
 
-        if key == glfw.KEY_7 and action == glfw.PRESS:
-            print("7: Exporting model...")
-            self.EXPORT = not self.EXPORT
+        # if key == glfw.KEY_7 and action == glfw.PRESS:
+        #     print("7: Exporting model...")
+        #     self.EXPORT = not self.EXPORT
 
     #     if key == glfw.KEY_R and action == glfw.PRESS:
     #         print("R: Resetting...")
@@ -253,7 +253,7 @@ def main():
 
     event_renderer = EventRenderer(event_plot.lines)
     imu_renderer = IMURenderer(imu_plot.lines)
-    nn_renderer = NNRenderer(nn_plot.lines)
+    nn_renderer = NNRenderer(nn_plot.lines, nn_data.batch_size + nn_data.labeling_delay + 10)
 
     HOTKEYS = Hotkeys(imu_stream, imu_plot, metronome, gesture_data, nn_model, nn_plot)
     glfw.set_key_callback(window, HOTKEYS.update)
