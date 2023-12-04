@@ -4,7 +4,6 @@ from OpenGL.GL import *
 import imgui
 from imgui.integrations.glfw import GlfwRenderer
 
-
 from modules.imu import IMUData
 from modules.stream import IMUStream
 from modules.plot import IMUPlot, EventPlot, NNPlot
@@ -50,7 +49,7 @@ def init_window():
 
 def init_gl():
     """Initializes OpenGL state."""
-    glClearColor(0.0, 0.0, 0.0, 1.0)
+    glClearColor(0.0, 0.0, 0.0, 2.0)
     glEnable(GL_MULTISAMPLE)
     # glEnable(GL_PROGRAM_POINT_SIZE)
     glEnable(GL_BLEND)
@@ -62,11 +61,16 @@ def init_ui(window):
     """Initializes and returns an ImGUI renderer."""
     imgui.create_context()
     impl = GlfwRenderer(window)
+    
+    #change imgui global scale
+    io = imgui.get_io()
+    io.font_global_scale = 1.0
     return impl
 
 
 def update_ui(impl):
     """Updates the ImGUI renderer."""
+    imgui.push_style_color(imgui.COLOR_TEXT, 0.0, 1.0, 1.0, 1.0)  # color
     impl.process_inputs()
     imgui.new_frame()
 
@@ -118,7 +122,7 @@ def main():
 
     imu_plot = IMUPlot(N_FRAMES)
     imu_data = IMUData(N_FRAMES)
-    imu_stream = IMUStream('/dev/cu.usbserial-028574DD', 1000000, record=False, read_file=False) #'dev/cu.usbserial-0283D2D2'
+    imu_stream = IMUStream('/dev/cu.usbserial-0283D2D2', 1000000, record=False, read_file=False) #'/dev/cu.usbserial-028574DD'
 
     metronome = Metronome(N_FRAMES, 60)
 

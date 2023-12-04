@@ -2,6 +2,7 @@ from keras.layers import Input, Dense, Conv1D, Flatten, GlobalMaxPooling1D, conc
 from keras.models import Model
 from keras.losses import CategoricalCrossentropy
 from keras.optimizers import Adam
+from keras.utils import plot_model
 # from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
 import numpy as np
@@ -134,5 +135,7 @@ class NeuralNetModel:
         OPT = Adam(learning_rate=0.001)
         MODEL.compile(loss=CategoricalCrossentropy(), optimizer=OPT, metrics=["categorical_accuracy"])
         MODEL.summary()
+
+        plot_model(MODEL, to_file='/images/model_diagram.svg', show_shapes=True, dpi = 60)
 
         return MODEL
