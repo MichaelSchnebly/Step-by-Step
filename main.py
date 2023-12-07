@@ -4,14 +4,14 @@ from OpenGL.GL import *
 import imgui
 from imgui.integrations.glfw import GlfwRenderer
 
-from modules.imu import IMUData
-from modules.stream import IMUStream
-from modules.plot import IMUPlot, EventPlot, NNPlot
-from modules.render import IMURenderer, EventRenderer, NNRenderer
-from modules.metronome import Metronome
-from modules.gesture import GestureData
-from modules.neuralnet import NeuralNetData, NeuralNetModel
-from modules.hotkeys import Hotkeys
+from src.imu import IMUData
+from src.stream import IMUStream
+from src.plot import IMUPlot, EventPlot, NNPlot
+from src.render import IMURenderer, EventRenderer, NNRenderer
+from src.metronome import Metronome
+from src.gesture import GestureData
+from src.neuralnet import NeuralNetData, NeuralNetModel
+from src.hotkeys import Hotkeys
 
 import numpy as np
 
