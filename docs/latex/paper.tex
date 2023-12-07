@@ -18,19 +18,19 @@
 \newcommand{\theHalgorithm}{\arabic{algorithm}}
 
 % Use the following line for the initial blind version submitted for review:
-\usepackage{mlsys2024}
+% \usepackage{mlsys2024}
 
 % If accepted, instead use the following line for the camera-ready submission:
-% \usepackage[accepted]{mlsys2024}
+\usepackage[accepted]{mlsys2024}
 
 % The \mlsystitle you define below is probably too long as a header.
 % Therefore, a short form for the running title is supplied here:
-\mlsystitlerunning{Submission and Formatting Instructions for MLSys 2024}
+\mlsystitlerunning{Step-by-Step: Training IMU-based Gestures with Live Feedback}
 
 \begin{document}
 
 \twocolumn[
-\mlsystitle{Submission and Formatting Instructions for MLSys 2024}
+\mlsystitle{Step-by-Step: Training IMU-based Gestures with Live Feedback}
 
 % It is OKAY to include author information, even for blind
 % submissions: the style file will automatically remove it for you
@@ -48,26 +48,12 @@
 \mlsyssetsymbol{equal}{*}
 
 \begin{mlsysauthorlist}
-\mlsysauthor{Aeiau Zzzz}{equal,to}
-\mlsysauthor{Bauiu C.~Yyyy}{equal,to,goo}
-\mlsysauthor{Cieua Vvvvv}{goo}
-\mlsysauthor{Iaesut Saoeu}{ed}
-\mlsysauthor{Fiuea Rrrr}{to}
-\mlsysauthor{Tateu H.~Yasehe}{ed,to,goo}
-\mlsysauthor{Aaoeu Iasoh}{goo}
-\mlsysauthor{Buiui Eueu}{ed}
-\mlsysauthor{Aeuia Zzzz}{ed}
-\mlsysauthor{Bieea C.~Yyyy}{to,goo}
-\mlsysauthor{Teoau Xxxx}{ed}
-\mlsysauthor{Eee Pppp}{ed}
+\mlsysauthor{Michael Schnebly}{h}
 \end{mlsysauthorlist}
 
-\mlsysaffiliation{to}{Department of Computation, University of Torontoland, Torontoland, Canada}
-\mlsysaffiliation{goo}{Googol ShallowMind, New London, Michigan, USA}
-\mlsysaffiliation{ed}{School of Computation, University of Edenborrow, Edenborrow, United Kingdom}
+\mlsysaffiliation{h}{School of Engineering and Applied Sciences, Harvard University, Cambridge, MA, USA}
 
-\mlsyscorrespondingauthor{Cieua Vvvvv}{c.vvvvv@googol.com}
-\mlsyscorrespondingauthor{Eee Pppp}{ep@eden.co.uk}
+\mlsyscorrespondingauthor{Michael Schnebly}{michael\_schnebly@g.harvard.edu}
 
 % You may provide any keywords that you
 % find helpful for describing your paper; these are used to populate
@@ -77,9 +63,7 @@
 \vskip 0.3in
 
 \begin{abstract}
-This document provides a basic paper template and submission guidelines.
-Abstracts must be a single paragraph, ideally between 4--6 sentences long.
-Gross violations will trigger corrections at the camera-ready phase.
+Recognizing user-defined gestures in inertial measurement unit (IMU) data unlocks new forms of creativity and accessibility in human-computer interaction. However, training gesture recognition models is a difficult task that requires a deep understanding of machine learning. We present Step-by-Step, a software tool that allows users to train gesture recognition models with live audiovisual feedback. Step-by-Step uses a simple neural network to learn to recognize and distinguish multiple gestures in IMU timeseries data. Users can train the model by performing gestures and receiving live feedback on the model's performance. Step-by-Step is designed to be accessible to users with no machine learning experience, while providing a powerful codebase for advanced users.
 \end{abstract}
 ]
 
@@ -91,8 +75,8 @@ Gross violations will trigger corrections at the camera-ready phase.
 % The \mlsysEqualContribution command is standard text for equal contribution.
 % Remove it (just {}) if you do not need this facility.
 
-%\printAffiliationsAndNotice{}  % leave blank if no need to mention equal contribution
-\printAffiliationsAndNotice{\mlsysEqualContribution} % otherwise use the standard text.
+\printAffiliationsAndNotice{}  % leave blank if no need to mention equal contribution
+% \printAffiliationsAndNotice{\mlsysEqualContribution} % otherwise use the standard text.
 
 \section{Electronic Submission}
 \label{submission}

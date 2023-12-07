@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex example_paper"] 1701977760 "example_paper.aux" "example_paper.bbl" "example_paper" 1701980570 0
-  "./example_paper.bib" 1701980476 2051 271917dc87acfd9d123013f431b1c906 ""
+["bibtex paper"] 1701982844 "paper.aux" "paper.bbl" "paper" 1701982928 0
   "./mlsys2024.bst" 1701980477 26917 d7ddf50f3ace2f76b21ad88d918927a1 ""
-  "example_paper.aux" 1701980569 1732 5e8ee4fb4aa7e74ef6d13919354932cc "pdflatex"
+  "example_paper.bib" 0 -1 0 ""
+  "paper.aux" 1701982927 1732 5e8ee4fb4aa7e74ef6d13919354932cc "pdflatex"
   (generated)
-  "example_paper.bbl"
-  "example_paper.blg"
+  "paper.bbl"
+  "paper.blg"
   (rewritten before read)
-["pdflatex"] 1701980568 "/Users/admin/code/step-by-step/docs/example_paper.tex" "example_paper.pdf" "example_paper" 1701980570 0
-  "/Users/admin/code/step-by-step/docs/example_paper.tex" 1701980568 24905 7837a66029940b6b7c704ee4aec559fb ""
+["pdflatex"] 1701982926 "/Users/admin/code/step-by-step/docs/latex/paper.tex" "paper.pdf" "paper" 1701982928 0
+  "/Users/admin/code/step-by-step/docs/latex/paper.tex" 1701982739 24903 1901d9038b7d1ee955cbacb91bb5bd8a ""
   "/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2023/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/adobe/courier/pcrb7t.tfm" 1136768653 960 4ab65358b8406f30ef5496c8c096d22b ""
@@ -133,15 +133,15 @@
   "/usr/local/texlive/2023/texmf.cnf" 1678822455 577 1b2b1af17af2508fb20dd85783af4050 ""
   "algorithm.sty" 1701980476 2223 ada3eaa0c1bd465a639433dfafc2fc4e ""
   "algorithmic.sty" 1701980476 7414 ce084815cf0aab483787dbc4bf2ace9c ""
-  "example_paper.aux" 1701980569 1732 5e8ee4fb4aa7e74ef6d13919354932cc "pdflatex"
-  "example_paper.bbl" 1701980476 2058 b81ba2ceccd8113dd970bc21f185971f "bibtex example_paper"
-  "example_paper.out" 1701980569 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "example_paper.tex" 1701980568 24905 7837a66029940b6b7c704ee4aec559fb ""
   "fancyhdr.sty" 1701980477 20521 e5d13d98d57bd53d4fed3aa61bd29c86 ""
-  "mlsys2024.sty" 1701980477 25970 cbf7f5990579c78e5be837cbacd15e39 ""
+  "mlsys2024.sty" 1701981488 26046 c6fd873c4daefe50e13f9e9288e43036 ""
+  "paper.aux" 1701982927 1732 5e8ee4fb4aa7e74ef6d13919354932cc "pdflatex"
+  "paper.bbl" 1701982308 2058 b81ba2ceccd8113dd970bc21f185971f "bibtex paper"
+  "paper.out" 1701982926 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "paper.tex" 1701982739 24903 1901d9038b7d1ee955cbacb91bb5bd8a ""
   (generated)
-  "example_paper.aux"
-  "example_paper.log"
-  "example_paper.out"
-  "example_paper.pdf"
+  "paper.aux"
+  "paper.log"
+  "paper.out"
+  "paper.pdf"
   (rewritten before read)
