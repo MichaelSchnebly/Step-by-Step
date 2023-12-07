@@ -15,17 +15,12 @@ from modules.hotkeys import Hotkeys
 
 import numpy as np
 
-
-
 # Constants and Global Variables
 TITLE = "Realtime IMU Data"
 N_FRAMES = 1024
 N_INPUT_FRAMES = 20
 N_MEMORY_FRAMES = 15
 FPS = 0
-
-
-
 
 def init_window():
     """Initializes and returns a GLFW window."""
@@ -55,37 +50,6 @@ def init_gl():
     glEnable(GL_BLEND)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
     glEnable(GL_LINE_SMOOTH)
-
-
-def init_ui(window):
-    """Initializes and returns an ImGUI renderer."""
-    imgui.create_context()
-    impl = GlfwRenderer(window)
-    
-    #change imgui global scale
-    io = imgui.get_io()
-    io.font_global_scale = 4.0
-    return impl
-
-
-def update_ui(impl):
-    """Updates the ImGUI renderer."""
-    imgui.push_style_color(imgui.COLOR_TEXT, 0.0, 1.0, 1.0, 1.0)  # color
-    impl.process_inputs()
-    imgui.new_frame()
-
-    if imgui.begin("Your Window", flags=
-                   imgui.WINDOW_NO_TITLE_BAR | 
-                   imgui.WINDOW_NO_RESIZE | 
-                   imgui.WINDOW_NO_SCROLLBAR | 
-                   imgui.WINDOW_NO_BACKGROUND):
-        imgui.text("X")
-        # if imgui.button("Click me!"):
-        #     print("Button clicked")
-
-    imgui.end()
-    imgui.render()
-    impl.render(imgui.get_draw_data())
 
 
 def update_data(imu_stream, imu_data, imu_plot, window, metronome, event_plot, gesture_data, nn_data, nn_plot):
@@ -120,7 +84,6 @@ def main():
         raise Exception("GLFW can't be initialized")
     
     window = init_window()
-    # impl = init_ui(window)
     init_gl()
 
     imu_plot = IMUPlot(N_FRAMES)
@@ -150,7 +113,6 @@ def main():
         if not HOTKEYS.PAUSE:
             glfw.poll_events()
             glClear(GL_COLOR_BUFFER_BIT)
-            # update_ui(impl)
 
             update_data(imu_stream, imu_data, imu_plot, window, metronome, event_plot, gesture_data, nn_data, nn_plot)
             event_renderer.render()
