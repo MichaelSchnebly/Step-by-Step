@@ -32,21 +32,27 @@ Recognizing user-defined gestures in inertial measurement unit (IMU) data unlock
 \printAffiliationsAndNotice{}
 
 
-
 \section{Introduction}
+For the past 40 years, the keyboard and mouse have been the primary means of human-computer interaction. The reliability and precision of these devices is undisputed, but it comes at a cost. The limited degrees of freedom available in keyboard and mouse inputs dictate which human body movements can be used to control computers, limiting both accessibility and creativity. 
 
-\section{Background}
+The ideal human-computer interface can adapt to a user's needs or preferences. It can be used by anyone, regardless of their physical abilities. It can be used in any context, regardless of the user's surroundings. It can be used to control any device, regardless of its form factor. It can be used to control any application, regardless of its purpose.
+
+The challenge in developing such a device is that it must be able to learn, recognize, and distinguish the user's movements. This is a difficult task that requires a deep understanding of machine learning. 
+
+In this paper, we present Step-by-Step, a software tool that allows users to train gesture recognition models with live audiovisual feedback. Step-by-Step uses a simple neural network to learn to recognize and distinguish multiple gestures in IMU timeseries data. Users can train the model by performing gestures and receiving live feedback on the model's performance. Step-by-Step is designed to be accessible to users with no machine learning experience, while providing a powerful codebase for advanced users.
+
+
+\subsection{Gesture Recognition}
+Gesture recognition is the process of recognizing and distinguishing gestures in data. Gestures are movements of the body that convey information. For example, a gesture might be a hand movement that indicates a desire to turn on a light. Gesture recognition is a key component of human-computer interaction, allowing users to interact with computers in a natural way.
+
+\subsection{Inertial Measurement Units}
+Inertial measurement units (IMUs) are sensors that measure the movement of the body. IMUs are commonly used in wearable devices such as smartwatches and fitness trackers. IMUs typically include an accelerometer, gyroscope, and magnetometer, each of which measures in three axes: x, y, and z.
+
+\subsection{Neural Networks}
+Neural networks are a class of machine learning models that are inspired by the structure of the brain. Neural networks are composed of layers of neurons, each of which takes in a set of inputs and produces an output. The outputs of one layer are used as inputs to the next layer. The first layer is called the input layer and the last layer is called the output layer. The layers in between are called hidden layers. The output layer produces the model's prediction.
 
 \section{Method}
-% Introductory paragraph summarizing the method's components: hardware, data collection, data labelling, model training, model inference, user interface, and the software architecture.
-% Hardware: what hardware is used, and how it is connected to the computer.
-% Data collection: how the data is collected, what data is collected, and how it is stored.
-% Data labelling: how the data is labelled, what the labels are, and how they are stored.
-% Model structure: what the model is, how it is structured, and how it is stored.
-% Model training: how the model is trained, what the model is, and how it is stored.
-% Model inference: how the model is used to make predictions, and how the predictions are stored.
-% User interface: how the user interacts with the system, and how the system interacts with the user.
-% Software architecture: how the system is structured, and how the components interact with each other.
+The system consists of hardware and software components. The hardware measures body movement and streams the data to a computer. The software processes the data, trains a neural network, and provides live feedback to the user. The system is designed to be accessible to users with no machine learning experience while providing a powerful codebase for advanced users.
 
 \subsection{Hardware}
 For measuring body movement, we used the Bosch BNO-055, a 9-axis IMU that includes an accelerometer, gyroscope, and magnetometer. The IMU uses I2C communication protocol to stream data to a microcontroller (Espressif ESP8266) which passes that data on to a laptop  (Macbook Pro 2017) via USB for further processing.
@@ -55,9 +61,9 @@ Note that the particular hardware components used in this project are not essent
 % The hardware is shown in Figure \ref{fig:hardware}.
 
 \subsection{Software}
-The software is written in Python and designed to be accessible to users with no machine learning experience while providing a powerful codebase for advanced users. The software is structured into three main components: data processing, neural network, and user interface. The data processing component handles data collection, labelling, and storage. The neural network component handles model structure, training, and inference. The user interface component handles user interaction and feedback.
+The software is written in Python and structured into three main components: data processing, neural network, and user interface. The data processing component handles data collection, labelling, and storage. The neural network component handles model structure, training, and inference. The user interface component handles user interaction and feedback.
 
-To facilitate realtime training and inference, the software is structured as a pipeline with the following processes running in parallel: data processing, model training, and model inference. Importantly all processes refer to the same global state, allowing the training data and model to be updated and tested in realtime as new data is collected.
+To facilitate realtime training and inference, the software is structured as a pipeline with the following processes running in parallel: data processing, model training, and model inference. Importantly all processes refer to the same global variables, allowing them to share updates to the model and training data in realtime.
 % The software architecture is shown in Figure \ref{fig:software_architecture}.
 
 \subsection{Data Processing}
@@ -75,23 +81,40 @@ The sensor branch consists of an input layer (short timeseries of recent sensor 
 % The model structure is shown in Figure \ref{fig:model_structure}.
 
 \subsubsection{Realtime Training}
-Training is performed using Tensorflow's default gradient descent optimizer. The training data consists of a timeseries of frames, each of which is labelled with a gesture. The model is trained on a sliding window of frames where window size is a user-defined parameter. For example, window size could be set to 20 frames, equating to 200ms of data at 100Hz. 
+Training is performed using Tensorflow's default gradient descent optimizer. The training data consists of a timeseries of frames, each of which is labelled with a gesture. The model is trained on a sliding window of frames where window size is a user-defined parameter.
 
 The window slides forward one frame at a time. If the most recent frame in a window is labelled with a gesture, the window is labelled with that gesture. Otherwise, the window is labelled with no gesture. As new windows are collected, the model is trained on the windows using gradient descent. Training is iterative and the model's training data is updated in realtime, allowing the user to receive live feedback on the model's performance.
 
 In principle this training could be done stochastically, training on each frame's window as it is collected. However, this would  would require a more sophisticated training algorithm that Tensorflow's built-in gradient descent optimizer (at least given the computational performance of the author's machine). For this reason, this proof-of-concept codebase defaults to training on batches of recent windows. When training completes, the model is updated, the training data is updated with recent frames, and training begins again.
 
 \subsubsection{Realtime Inference}
-As the model is updated, its performance is tested on the most recent frames using Tensorflow. Along with the groundtruth labels, the model's predictions are used to generate live feedback for the user using both auditory and visual cues as discussed in the User Interface section.
+As the model is updated, its performance is tested on the most recent frames using Tensorflow. Ideally, this would be done on a frame-by-frame basis, but computational constraints required the authors to batch the frames and perform inference on batches.
 
-\subsection{User Interface}
-The user interface is designed to provide live feedback on the model's performance. The user interface consists of two components: a visual component and an auditory component. The visual component is a simple GUI that displays the model's predictions and groundtruth labels in realtime. The auditory component is a simple synthesizer that plays a tone corresponding to the model's prediction. 
+Along with the groundtruth labels, the model's predictions are used to generate live feedback for the user using both auditory and visual cues. The auditory cue is a simple synthesizer that plays a tone corresponding to the model's prediction. The visual cue is a simple GUI that displays the IMU timeseries, model's predictions, and groundtruth labels in realtime.
 
-Using keyboard inputs, the user can control various aspects of the application. The user can start and stop data collection, start and stop model training, and start and stop model inference.
-% The user interface is shown in Figure \ref{fig:user_interface}.
+\subsection{User Interface and Control}
+All rendering is done using OpenGL. With keyboard inputs, the user can control various aspects of the application. The user can start and stop data collection, data labelling, model training, and model inference.
+% The user interface and controls are shown in Figure \ref{fig:user_interface}.
+
+\section{Results}
+After just a few examples of a gesture, the model converges on solution that reliably distinguishes gesture from non-gesture. Performance improves as more examples are provided. Here, the authors only test the model's ability to recognize a single gesture, but based on prior experience using this model in non-realtime training scenarios, the authors expect the model to be able to distinguish multiple gestures with high accuracy.
+% The model's performance is shown in Figure \ref{fig:performance}.
+
+\section{Next Steps}
+There are many ways in which the system could be improved in terms of hardware, software, and user experience.
+
+The current hardware system uses a microcontroller to stream IMU data to a computer for processing. However, given the small size of the model (default settings: ~2kb with ~500 params) and recent advances in embedded machine learning, it should be possible to run the entire system in realtime on a single microcontroller, including labelling, training, and inference. This would allow the system to be used in a wider range of applications, including those where a computer is not available, desirable, or practical. To this end, the authors are currently exploring the possiblity of using Espressifs ESP32-S3 chip, which includes a neural network accelerator and is capable of running Tensorflow Lite Micro.
+
+The current software is written in Python and uses Tensorflow for training and inference. This solution is relatively simple, but is not ideal for realtime applications. The authors are currently exploring the possibility of rewriting the software in C++ and using Tensorflow Lite Micro for training and inference. This would allow the system to be run on a microcontroller, as described above.
+
+The current user interface is a simple OpenGL-based GUI that displays the IMU timeseries, model's predictions, and groundtruth labels in realtime. This solution is relatively barebones and should work on most operating systems, but it is dependent on streaming the data to a personal computer. The authors are considering the minimal user-interface necessary to run the system on a microcontroller, including a simple LCD display and a few buttons for control.
 
 
-\section{Findings}
+\section{Closing Remarks}
+Step-by-Step serves as a proof-of-concept for realtime learning of user-defined gestures in IMU data. However, the system is not limited to IMU data and could be extended to other types of bodytracking data such as the 2D and 3D pose estimation. The authors hope that this work will inspire others to explore the possibilities of realtime machine learning in human-computer interaction.
+
+\section{Acknowledgements}
+The authors would like the thank Harvard's TinyML course staff for their guidance and support throughout the semester, including: Jason Jabbour, Ike Uchendu, Jessica Quaye, Matthew Stewart, and Vijay Janapa Reddi.
 
 \bibliography{example_paper}
 \bibliographystyle{mlsys2024}

@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex paper"] 1702314156 "paper.aux" "paper.bbl" "paper" 1702324660 0
+["bibtex paper"] 1702328903 "paper.aux" "paper.bbl" "paper" 1702330479 0
   "./mlsys2024.bst" 1702304895 26917 d7ddf50f3ace2f76b21ad88d918927a1 ""
   "example_paper.bib" 0 -1 0 ""
-  "paper.aux" 1702324660 1074 cb857afe3d8965cf1906d268f59b5cf1 "pdflatex"
+  "paper.aux" 1702330478 1074 b46c8ef19489758072b66791c6b72655 "pdflatex"
   (generated)
   "paper.bbl"
   "paper.blg"
   (rewritten before read)
-["pdflatex"] 1702324658 "/Users/admin/code/step-by-step/docs/latex/paper.tex" "paper.pdf" "paper" 1702324660 0
-  "/Users/admin/code/step-by-step/docs/latex/paper.tex" 1702324658 8680 e8a70623d82b97fb8422fc82a367d5f2 ""
+["pdflatex"] 1702330477 "/Users/admin/code/step-by-step/docs/latex/paper.tex" "paper.pdf" "paper" 1702330479 0
+  "/Users/admin/code/step-by-step/docs/latex/paper.tex" 1702330477 13394 d6b50089d8c6185a9544c44bd12ef415 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2023/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/adobe/courier/pcrr7t.tfm" 1136768653 960 379cc0019370a9e0208a0a3f949f847a ""
@@ -108,10 +108,10 @@
   "algorithmic.sty" 1702304895 7414 ce084815cf0aab483787dbc4bf2ace9c ""
   "fancyhdr.sty" 1702304895 20521 e5d13d98d57bd53d4fed3aa61bd29c86 ""
   "mlsys2024.sty" 1702304895 26046 c6fd873c4daefe50e13f9e9288e43036 ""
-  "paper.aux" 1702324660 1074 cb857afe3d8965cf1906d268f59b5cf1 "pdflatex"
+  "paper.aux" 1702330478 1074 b46c8ef19489758072b66791c6b72655 "pdflatex"
   "paper.bbl" 1702304895 2058 b81ba2ceccd8113dd970bc21f185971f "bibtex paper"
-  "paper.out" 1702324659 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "paper.tex" 1702324658 8680 e8a70623d82b97fb8422fc82a367d5f2 ""
+  "paper.out" 1702330478 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "paper.tex" 1702330477 13394 d6b50089d8c6185a9544c44bd12ef415 ""
   (generated)
   "paper.aux"
   "paper.log"
