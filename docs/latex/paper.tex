@@ -35,21 +35,23 @@ Recognizing user-defined gestures in inertial measurement unit (IMU) data unlock
 \section{Introduction}
 For the past 40 years, the keyboard and mouse have been the primary means of human-computer interaction. The reliability and precision of these devices is undisputed, but it comes at a cost. The limited degrees of freedom available in keyboard and mouse inputs dictate which human body movements can be used to control computers, limiting both accessibility and creativity. 
 
-The ideal human-computer interface can adapt to a user's needs or preferences. It can be used by anyone, regardless of their physical abilities. It can be used in any context, regardless of the user's surroundings. It can be used to control any device, regardless of its form factor. It can be used to control any application, regardless of its purpose.
-
-The challenge in developing such a device is that it must be able to learn, recognize, and distinguish the user's movements. This is a difficult task that requires a deep understanding of machine learning. 
+The ideal human-computer interface can adapt to a user's needs or preferences and can be used by anyone, regardless of their physical abilities. The challenge in developing such a device is that it must be able to learn, recognize, and distinguish the user's movements. This is a difficult task that requires a deep understanding of machine learning. 
 
 In this paper, we present Step-by-Step, a software tool that allows users to train gesture recognition models with live audiovisual feedback. Step-by-Step uses a simple neural network to learn to recognize and distinguish multiple gestures in IMU timeseries data. Users can train the model by performing gestures and receiving live feedback on the model's performance. Step-by-Step is designed to be accessible to users with no machine learning experience, while providing a powerful codebase for advanced users.
 
-
+\section{Background}
 \subsection{Gesture Recognition}
-Gesture recognition is the process of recognizing and distinguishing gestures in data. Gestures are movements of the body that convey information. For example, a gesture might be a hand movement that indicates a desire to turn on a light. Gesture recognition is a key component of human-computer interaction, allowing users to interact with computers in a natural way.
+Gesture recognition is the process of recognizing and distinguishing gestures in data. Gestures are body movement patterns that convey information. In a way, keyboards and mice perform gesture recognition by translating body movements into computer inputs. However, these devices are limited to a small set of predefined gestures. The goal of this work is to allow users to define their own gestures and use them to control computers.
 
 \subsection{Inertial Measurement Units}
-Inertial measurement units (IMUs) are sensors that measure the movement of the body. IMUs are commonly used in wearable devices such as smartwatches and fitness trackers. IMUs typically include an accelerometer, gyroscope, and magnetometer, each of which measures in three axes: x, y, and z.
+Inertial measurement units (IMUs) are one of many types types of sensors that can be used to measure body movement. IMUs typically include an accelerometer, gyroscope, and magnetometer, each of which measures in three axes: x, y, and z. IMUs are commonly used in wearable devices to track body movements over time. In this work, we use IMUs to measure body movement and recognize gestures.
 
 \subsection{Neural Networks}
-Neural networks are a class of machine learning models that are inspired by the structure of the brain. Neural networks are composed of layers of neurons, each of which takes in a set of inputs and produces an output. The outputs of one layer are used as inputs to the next layer. The first layer is called the input layer and the last layer is called the output layer. The layers in between are called hidden layers. The output layer produces the model's prediction.
+Neural networks are a class of machine learning models that can be used to analyze IMU timeseries and identify patterns such as gestures. Neural networks are composed of layers of "neurons", each of which takes in a set of inputs, performs a simple function, and produces an output. The outputs of one layer are used as inputs to the next. The final layer represents the model's prediction.
+
+Neural networks are trained by providing them with examples of inputs and corresponding correct outputs. The model adjusts its parameters to minimize the difference between its predictions and the groundtruth outputs. This process is called gradient descent and is performed iteratively until the model converges on a solution. Once trained, the model can be used to make predictions on new inputs.
+
+IMUs and neural networks are well-established and have been used together in a wide range of applications for characterizing body movements. However, a machine learning system that can be easily trained to recognize user-defined gestures with performance rivaling that of the mouse and keyboard remains elusive. The goal of this work is to lay the foundation for such a system.
 
 \section{Method}
 The system consists of hardware and software components. The hardware measures body movement and streams the data to a computer. The software processes the data, trains a neural network, and provides live feedback to the user. The system is designed to be accessible to users with no machine learning experience while providing a powerful codebase for advanced users.
@@ -103,7 +105,7 @@ After just a few examples of a gesture, the model converges on solution that rel
 \section{Next Steps}
 There are many ways in which the system could be improved in terms of hardware, software, and user experience.
 
-The current hardware system uses a microcontroller to stream IMU data to a computer for processing. However, given the small size of the model (default settings: ~2kb with ~500 params) and recent advances in embedded machine learning, it should be possible to run the entire system in realtime on a single microcontroller, including labelling, training, and inference. This would allow the system to be used in a wider range of applications, including those where a computer is not available, desirable, or practical. To this end, the authors are currently exploring the possiblity of using Espressifs ESP32-S3 chip, which includes a neural network accelerator and is capable of running Tensorflow Lite Micro.
+The current hardware system uses a microcontroller to stream IMU data to a computer for processing. However, given the small size of the model (default settings: ~2kb with ~500 params) and recent advances in embedded machine learning, it should be possible to run the entire system in realtime on a wireless, wearable microcontroller, including labelling, training, and inference. This would allow the system to be used in a wider range of applications, including those where a computer is not available, desirable, or practical. To this end, the authors are currently exploring the possiblity of using Espressifs ESP32-S3 chip, which includes a neural network accelerator and is capable of running Tensorflow Lite Micro.
 
 The current software is written in Python and uses Tensorflow for training and inference. This solution is relatively simple, but is not ideal for realtime applications. The authors are currently exploring the possibility of rewriting the software in C++ and using Tensorflow Lite Micro for training and inference. This would allow the system to be run on a microcontroller, as described above.
 
@@ -111,7 +113,7 @@ The current user interface is a simple OpenGL-based GUI that displays the IMU ti
 
 
 \section{Closing Remarks}
-Step-by-Step serves as a proof-of-concept for realtime learning of user-defined gestures in IMU data. However, the system is not limited to IMU data and could be extended to other types of bodytracking data such as the 2D and 3D pose estimation. The authors hope that this work will inspire others to explore the possibilities of realtime machine learning in human-computer interaction.
+Step-by-Step serves as a proof-of-concept for realtime learning of user-defined gestures in IMU data. It is worth noting that the strategies employed here are not limited to IMU data and could be applied to data from other sensors. The authors hope that this work will inspire others to explore the possibilities of realtime machine learning in human-computer interaction.
 
 \section{Acknowledgements}
 The authors would like the thank Harvard's TinyML course staff for their guidance and support throughout the semester, including: Jason Jabbour, Ike Uchendu, Jessica Quaye, Matthew Stewart, and Vijay Janapa Reddi.
