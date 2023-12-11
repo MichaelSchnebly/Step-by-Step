@@ -38,6 +38,50 @@ Recognizing user-defined gestures in inertial measurement unit (IMU) data unlock
 \section{Background}
 
 \section{Method}
+% Introductory paragraph summarizing the method's components: hardware, data collection, data labelling, model training, model inference, user interface, and the software architecture.
+% Hardware: what hardware is used, and how it is connected to the computer.
+% Data collection: how the data is collected, what data is collected, and how it is stored.
+% Data labelling: how the data is labelled, what the labels are, and how they are stored.
+% Model structure: what the model is, how it is structured, and how it is stored.
+% Model training: how the model is trained, what the model is, and how it is stored.
+% Model inference: how the model is used to make predictions, and how the predictions are stored.
+% User interface: how the user interacts with the system, and how the system interacts with the user.
+% Software architecture: how the system is structured, and how the components interact with each other.
+
+\subsection{Hardware}
+For measuring body movement, we used the Bosch BNO-055, a 9-axis IMU that includes an accelerometer, gyroscope, and magnetometer. The IMU uses I2C communication protocol to stream data to a microcontroller (Espressif ESP8266) which passes that data on to a laptop  (Macbook Pro 2017) via USB for further processing.
+
+Note that the particular hardware components used in this project are not essential to the system. They could be replaced with other options so long as the sensor data contains information necessary to recognize and distinguish the gestures of interest and the computer (or microcontroller if using purely embedded approach) is capable of running the software at a rate matching that of data collection.
+% The hardware is shown in Figure \ref{fig:hardware}.
+
+\subsection{Software}
+The software is written in Python and designed to be accessible to users with no machine learning experience while providing a powerful codebase for advanced users. The software is structured into three main components: data processing, neural network, and user interface. The data processing component handles data collection, labelling, and storage. The neural network component handles model structure, training, and inference. The user interface component handles user interaction and feedback. 
+% The software architecture is shown in Figure \ref{fig:software_architecture}.
+
+
+\subsection{Data Processing}
+\subsubsection{Collection}
+The IMU data is collected as a timeseries of frames. Each frame is a 3D vector representing linear acceleration in each of the three axes: x, y, and z. The data is collected at a rate of 100 Hz and can be streamed directly from an IMU, recorded to a file, or loaded from a file.
+
+\subsubsection{Labelling}
+The data is labelled by associating each frame with a gesture. A gesture is a sequence of frames that represents a single movement of the body. Here, we focus on percussive gestures and assume that a gesture is complete at the local peak in linear acceleration's magnitude. This constraint allow us to label gestures using a simple peak-detection algorithm. When a local peak meet's user-defined criteria (e.g. acceleration is above a certain threshold), the peak frame is labelled as containing a gesture. All other frames are labelled as containing no gesture.
+
+\subsection{Neural Network}
+\subsubsection{Structure}
+
+The input to the network is a sequence of frames, each of which is a 3D vector representing linear acceleration in each of the three axes: x, y, and z. The output of the network is a vector of probabilities, one for each gesture. The network is trained to maximize the probability of the correct gesture and minimize the probabilities of all other gestures.
+The neural network is a shallow, two-branched model. One branch represents a recent history of sensor values while the other represents a recent history of model outputs. Combining the information from the these two sources, the model is trained to maximize the probability of the correct gesture and minimize the probabilities of all other gestures.
+
+The sensor branch consists of an input layer (short timeseries of recent sensor values) and a 1D convolutional layer (recognizes patterns in the timeseries). The memory branch consists of an input layer (short timeseries of recent model outputs) and a max pooling layer (identifies the maximum probability that a gesture has been predicted recently). These branches are then concatenated and followed by a fully connected output layer.
+
+\subsubsection{Training}
+
+
+
+
+% The algorithm is described in more detail in the Appendix.
+
+
 
 \section{Findings}
 
