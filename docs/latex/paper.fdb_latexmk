@@ -1,8 +1,8 @@
 # Fdb version 4
-["pdflatex"] 1702355885 "/Users/admin/code/step-by-step/docs/latex/paper.tex" "paper.pdf" "paper" 1702355886 0
+["pdflatex"] 1702356182 "/Users/admin/code/step-by-step/docs/latex/paper.tex" "paper.pdf" "paper" 1702356183 0
   "../figures/model_diagram.jpg" 1702354043 320822 e1a47e6a9efd0faab11a673fe64011a8 ""
   "../figures/realtime_training.jpg" 1702353272 318549 80288583b14fbefd40f81e008858942c ""
-  "/Users/admin/code/step-by-step/docs/latex/paper.tex" 1702355884 16192 f44dddcbbfe8ee0e378748f850677e92 ""
+  "/Users/admin/code/step-by-step/docs/latex/paper.tex" 1702356182 16369 5ef4b38f8ed7ac7b112aa2b5cb82c4cb ""
   "/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2023/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/adobe/courier/pcrr7t.tfm" 1136768653 960 379cc0019370a9e0208a0a3f949f847a ""
@@ -105,9 +105,9 @@
   "algorithmic.sty" 1702304895 7414 ce084815cf0aab483787dbc4bf2ace9c ""
   "fancyhdr.sty" 1702304895 20521 e5d13d98d57bd53d4fed3aa61bd29c86 ""
   "mlsys2024.sty" 1702304895 26046 c6fd873c4daefe50e13f9e9288e43036 ""
-  "paper.aux" 1702355886 2159 022a1cd3a5b9893a9feab923f2e082cc "pdflatex"
-  "paper.out" 1702355886 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "paper.tex" 1702355884 16192 f44dddcbbfe8ee0e378748f850677e92 ""
+  "paper.aux" 1702356183 2159 022a1cd3a5b9893a9feab923f2e082cc "pdflatex"
+  "paper.out" 1702356183 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "paper.tex" 1702356182 16369 5ef4b38f8ed7ac7b112aa2b5cb82c4cb ""
   (generated)
   "paper.aux"
   "paper.log"
