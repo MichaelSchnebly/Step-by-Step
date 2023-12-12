@@ -54,7 +54,7 @@ Make sure you have the following prerequisites installed on your system:
 
 2. Modify the code as needed to suit your requirements.
 
-3. At minimum, you'll need to identify the serial address of your microcontroller and update that value in main.py.
+3. At minimum, you must identify your microcontroller's serial address and update that value in `main.py`
 
 4. Run the script:
 
@@ -64,11 +64,14 @@ Make sure you have the following prerequisites installed on your system:
 
 5. Control the program using keyboard hotkeys:
 
-    - `ESC`: Exiting the application
-    - `SPACE`: Pausing or starting the application
-    - `1`: Starting or stopping IMU stream
-    - `2`: Starting or stopping magnitude plot
-    - `M`: Starting or stopping the metronome
-    - `3`: Starting or stopping labeling
-    - `4`: Starting or stopping neural network inference
-    - `5`: Starting or stopping neural network training
+    Start/Stop...
+    - `SPACE`: Application
+    - `M`: Metronome
+    - `1`: IMU Stream
+    - `2`: Magnitude Plot
+    - `3`: Peak Labeling
+    - `4`: Neural Network Inference
+    - `5`: Neural Network Training
+
+    And...
+    - `ESC`: Application Exit
