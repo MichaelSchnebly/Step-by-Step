@@ -1,14 +1,8 @@
 # Fdb version 4
-["bibtex paper"] 1702328903 "paper.aux" "paper.bbl" "paper" 1702332328 0
-  "./mlsys2024.bst" 1702304895 26917 d7ddf50f3ace2f76b21ad88d918927a1 ""
-  "example_paper.bib" 0 -1 0 ""
-  "paper.aux" 1702332327 1074 b46c8ef19489758072b66791c6b72655 "pdflatex"
-  (generated)
-  "paper.bbl"
-  "paper.blg"
-  (rewritten before read)
-["pdflatex"] 1702332326 "/Users/admin/code/step-by-step/docs/latex/paper.tex" "paper.pdf" "paper" 1702332328 0
-  "/Users/admin/code/step-by-step/docs/latex/paper.tex" 1702332326 14068 a88643729414e9041479dd648f6d39b3 ""
+["pdflatex"] 1702355885 "/Users/admin/code/step-by-step/docs/latex/paper.tex" "paper.pdf" "paper" 1702355886 0
+  "../figures/model_diagram.jpg" 1702354043 320822 e1a47e6a9efd0faab11a673fe64011a8 ""
+  "../figures/realtime_training.jpg" 1702353272 318549 80288583b14fbefd40f81e008858942c ""
+  "/Users/admin/code/step-by-step/docs/latex/paper.tex" 1702355884 16192 f44dddcbbfe8ee0e378748f850677e92 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2023/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/adobe/courier/pcrr7t.tfm" 1136768653 960 379cc0019370a9e0208a0a3f949f847a ""
@@ -20,6 +14,8 @@
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmr8r.tfm" 1136768653 4408 25b74d011a4c66b7f212c0cc3c90061b ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmri7t.tfm" 1136768653 2288 f478fc8fed18759effb59f3dad7f3084 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmri8r.tfm" 1136768653 4640 532ca3305aad10cc01d769f3f91f1029 ""
+  "/usr/local/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmro7t.tfm" 1136768653 2212 ddd058020f70d31af08b213e40125079 ""
+  "/usr/local/texlive/2023/texmf-dist/fonts/tfm/adobe/times/ptmro8r.tfm" 1136768653 4548 f370a182a02c40d95c5554802dc0f174 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmmi6.tfm" 1136768653 1512 f21f83efb36853c0b70002322c1ab3ad ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmmi9.tfm" 1136768653 1524 d89e2d087a9828407a196f428428ef4a ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmr6.tfm" 1136768653 1300 b62933e007d01cfd073f79b963c01526 ""
@@ -36,6 +32,7 @@
   "/usr/local/texlive/2023/texmf-dist/fonts/vf/adobe/times/ptmbc7t.vf" 1136768653 1948 09614867cfee727c370daa115b7f3542 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/vf/adobe/times/ptmr7t.vf" 1136768653 1380 0ea3a3370054be6da6acd929ec569f06 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/vf/adobe/times/ptmri7t.vf" 1136768653 1384 a9d8adaf491ce34e5fba99dc7bbe5f39 ""
+  "/usr/local/texlive/2023/texmf-dist/fonts/vf/adobe/times/ptmro7t.vf" 1136768653 1384 5daa35f30ad788d676a07a579b5db7fa ""
   "/usr/local/texlive/2023/texmf-dist/tex/context/base/mkii/supp-pdf.mkii" 1461363279 71627 94eb9990bed73c364d7f53f960cc8c5b ""
   "/usr/local/texlive/2023/texmf-dist/tex/generic/atbegshi/atbegshi.sty" 1575674566 24708 5584a51a7101caf7e6bbf1fc27d8f7b1 ""
   "/usr/local/texlive/2023/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty" 1576625341 40635 c40361e206be584d448876bba8a64a3b ""
@@ -108,10 +105,9 @@
   "algorithmic.sty" 1702304895 7414 ce084815cf0aab483787dbc4bf2ace9c ""
   "fancyhdr.sty" 1702304895 20521 e5d13d98d57bd53d4fed3aa61bd29c86 ""
   "mlsys2024.sty" 1702304895 26046 c6fd873c4daefe50e13f9e9288e43036 ""
-  "paper.aux" 1702332327 1074 b46c8ef19489758072b66791c6b72655 "pdflatex"
-  "paper.bbl" 1702304895 2058 b81ba2ceccd8113dd970bc21f185971f "bibtex paper"
-  "paper.out" 1702332327 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "paper.tex" 1702332326 14068 a88643729414e9041479dd648f6d39b3 ""
+  "paper.aux" 1702355886 2159 022a1cd3a5b9893a9feab923f2e082cc "pdflatex"
+  "paper.out" 1702355886 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "paper.tex" 1702355884 16192 f44dddcbbfe8ee0e378748f850677e92 ""
   (generated)
   "paper.aux"
   "paper.log"

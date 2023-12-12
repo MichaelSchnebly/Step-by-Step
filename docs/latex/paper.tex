@@ -29,6 +29,8 @@ Recognizing user-defined gestures in inertial measurement unit (IMU) data unlock
 \end{abstract}
 ]
 
+
+
 \printAffiliationsAndNotice{}
 
 
@@ -39,9 +41,14 @@ The ideal human-computer interface can adapt to a user's needs or preferences an
 
 In this paper, we present Step-by-Step, a software tool that allows users to train gesture recognition models with live audiovisual feedback. Step-by-Step uses a simple neural network to learn to recognize and distinguish multiple gestures in IMU timeseries data. Users can train the model by performing gestures and receiving live feedback on the model's performance. Step-by-Step is designed to be accessible to users with no machine learning experience, while providing a powerful codebase for advanced users.
 
+
+
 \section{Background}
 \subsection{Gesture Recognition}
 Gesture recognition is the process of recognizing and distinguishing gestures in data. Gestures are body movement patterns that convey information. In a way, keyboards and mice perform gesture recognition by translating body movements into computer inputs. However, these devices are limited to a small set of predefined gestures. The goal of this work is to allow users to define their own gestures and use them to control computers.
+
+
+
 
 \subsection{Inertial Measurement Units}
 Inertial measurement units (IMUs) are one of many types types of sensors that can be used to measure body movement. IMUs typically include an accelerometer, gyroscope, and magnetometer, each of which measures in three axes: x, y, and z. IMUs are commonly used in wearable devices to track body movements over time. In this work, we use IMUs to measure body movement and recognize gestures.
@@ -68,12 +75,28 @@ The software is written in Python and structured into three main components: dat
 To facilitate realtime training and inference, the software is structured as a pipeline with the following processes running in parallel: data processing, model training, and model inference. Importantly all processes refer to the same global variables, allowing them to share updates to the model and training data in realtime.
 % The software architecture is shown in Figure \ref{fig:software_architecture}.
 
+
+\begin{figure}[h]
+    \includegraphics[width=0.5\textwidth]{../figures/model_diagram.jpg}
+    \caption{Neural Network Architecture. The sensor branch (left) receives 20 frames (200 ms at 100 Hz) of 3-channel (x, y, z) IMU data. The sensor branch feeds into a 1D-convolutional layer with 8 filters, each also 20 frames in width. The memory branch (right) receives 15 frames of 1-hot encoded prediction data. The two branches are concatenated and fed into a fully connected output layer to predict the currently active gesture.}
+    \label{fig:your_label}
+\end{figure}
+
+
 \subsection{Data Processing}
 \subsubsection{Collection}
 The IMU data is collected as a timeseries of frames. Each frame is a 3D vector representing linear acceleration in each of the three axes: x, y, and z. The data is collected at a rate of 100 Hz and can be streamed directly from an IMU, recorded to a file, or loaded from a file.
 
 \subsubsection{Labelling}
 The data is labelled by associating each frame with a gesture. A gesture is a sequence of frames that represents a single movement of the body. Here, we focus on percussive gestures and assume that a gesture is complete at the local peak in linear acceleration's magnitude. This constraint allow us to achieve realtime, automated labelling of gestures using a simple peak-detection algorithm. When a local peak meet's user-defined criteria (e.g. acceleration is above a certain threshold), the peak frame is labelled as containing a gesture. All other frames are labelled as containing no gesture.
+
+
+\begin{figure*}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{../figures/realtime_training.jpg}
+    \caption{Live Learning Feedback: The user performs a gesture and receives live feedback on the model's performance. Bottom Panel: 10 seconds of training data. Acceleration components (x, y, z) are shown in color; magnitude is shown in grey. Each magnitude peak is marked by a thin vertical line, indicating it has been labelled as a gesture in the training data. Top Panel: 10 seconds of inference data. At t = 0 seconds the neural network is completely untrained. Naive to what is and is not a gesture, it predicts gesture and non-gesture with equal probability (0.5). As the model trains on non-gesture date, it begins to predict non-gesture with higher probability. At t = 5 seconds, the model has converged on a solution that reliably distinguishes non-gesture. At t = 10 seconds, the model has converged on a solution that reliably distinguishes gestures. Given more training data and time to learn, the model's performance would continue to improve with gessture and non-gesture probabilities approaching 1 and 0, respectively. See supplementary video for live demo in the github repo.}
+    \label{fig:realtime_training}
+\end{figure*}
 
 \subsection{Neural Network}
 \subsubsection{Structure}
@@ -82,24 +105,27 @@ The neural network is a shallow, two-branched model. One branch represents a rec
 The sensor branch consists of an input layer (short timeseries of recent sensor values) followed by a  a 1D convolutional layer (recognizes patterns in the timeseries). The memory branch consists of an input layer (short timeseries of recent model outputs) followed by a max pooling layer (summarizes the timeseries of recent model outputs based on its highest values). These branches are then concatenated and followed by a fully connected output layer. 
 % The model structure is shown in Figure \ref{fig:model_structure}.
 
+
+
+
 \subsubsection{Realtime Training}
 Training is performed using Tensorflow's default gradient descent optimizer. The training data consists of a timeseries of frames, each of which is labelled with a gesture. The model is trained on a sliding window of frames where window size is a user-defined parameter.
 
-The window slides forward one frame at a time. If the most recent frame in a window is labelled with a gesture, the window is labelled with that gesture. Otherwise, the window is labelled with no gesture. As new windows are collected, the model is trained on the windows using gradient descent. Training is iterative and the model's training data is updated in realtime, allowing the user to receive live feedback on the model's performance.
+The window slides forward one frame at a time. If the most recent frame in a window is labelled with a gesture, the window is labelled with that gesture. Otherwise, the window is labelled with no gesture. As new windows are collected, the model is trained on the windows using gradient descent. Training is iterative and the model's training data is updated in realtime, allowing the user to receive live feedback on the model's performance. This process is illustated in Figure \ref{fig:realtime_training}.
 
 In principle this training could be done stochastically, training on each frame's window as it is collected. However, this would  would require a more sophisticated training algorithm that Tensorflow's built-in gradient descent optimizer (at least given the computational performance of the author's machine). For this reason, this proof-of-concept codebase defaults to training on batches of recent windows. When training completes, the model is updated, the training data is updated with recent frames, and training begins again.
 
 \subsubsection{Realtime Inference}
 As the model is updated, its performance is tested on the most recent frames using Tensorflow. Ideally, this would be done on a frame-by-frame basis, but computational constraints required the authors to batch the frames and perform inference on batches.
 
-Along with the groundtruth labels, the model's predictions are used to generate live feedback for the user using both auditory and visual cues. The auditory cue is a simple synthesizer that plays a tone corresponding to the model's prediction. The visual cue is a simple GUI that displays the IMU timeseries, model's predictions, and groundtruth labels in realtime.
+Along with the groundtruth labels, the model's predictions are used to generate live feedback for the user using both auditory and visual cues. The auditory cue is a simple synthesizer that plays a tone corresponding to the model's prediction. The visual cue is a simple GUI that displays the IMU timeseries, model's predictions, and groundtruth labels in realtime. The visual elements are illustated in Figure \ref{fig:realtime_training}.
 
 \subsection{User Interface and Control}
 All rendering is done using OpenGL. With keyboard inputs, the user can control various aspects of the application. The user can start and stop data collection, data labelling, model training, and model inference.
 % The user interface and controls are shown in Figure \ref{fig:user_interface}.
 
 \section{Results}
-After just a few examples of a gesture, the model converges on solution that reliably distinguishes gesture from non-gesture. Performance improves as more examples are provided. Here, the authors only test the model's ability to recognize a single gesture, but based on prior experience using this model in non-realtime training scenarios, the authors expect the model to be able to distinguish multiple gestures with high accuracy.
+After just a few examples of a gesture, the model converges on solution that reliably distinguishes gesture from non-gesture. Performance improves as more examples are provided. Here, the authors only test the model's ability to recognize a single gesture, but based on prior experience using this model in non-realtime training scenarios, the authors expect the model to be able to distinguish multiple gestures with high accuracy. A representative example of the model learning to recognize a single gesture in just 10 seconds is shown in Figure \ref{fig:realtime_training}.
 % The model's performance is shown in Figure \ref{fig:performance}.
 
 \section{Next Steps}
@@ -118,8 +144,7 @@ Step-by-Step serves as a proof-of-concept for realtime learning of user-defined 
 \section{Acknowledgements}
 The authors would like the thank Harvard's TinyML course staff for their guidance and support throughout the semester, including: Jason Jabbour, Ike Uchendu, Jessica Quaye, Matthew Stewart, and Vijay Janapa Reddi.
 
-\bibliography{example_paper}
-\bibliographystyle{mlsys2024}
-
+% \bibliography{example_paper}
+% \bibliographystyle{mlsys2024}
 
 \end{document}
