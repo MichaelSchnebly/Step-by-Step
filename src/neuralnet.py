@@ -30,7 +30,7 @@ class NeuralNetData:
         self.output_labels = np.zeros((n_samples, n_labels), dtype=np.float32)
         self.output_results = np.full((n_samples), 0.5, dtype=np.float32)
 
-        self.high_beat = sa.WaveObject.from_wave_file("sounds/metronome_hi.wav")
+        self.high_beat = sa.WaveObject.from_wave_file("assets/sounds/metronome_hi.wav")
     
     def update(self, input_data_window, input_memory_window, output_labels):
         self.batch_count += 1

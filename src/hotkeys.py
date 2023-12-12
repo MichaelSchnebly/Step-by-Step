@@ -83,10 +83,10 @@ class Hotkeys:
         if key == glfw.KEY_3 and action == glfw.PRESS:
             self.LABELING = not self.LABELING
             if self.LABELING:
-                print("4: Starting Labeling...")
+                print("3: Starting Labeling...")
                 self.gesture_data.start_labeling()
             else:
-                print("4: Stopping Labeling...")
+                print("3: Stopping Labeling...")
                 self.gesture_data.stop_labeling()
 
         if key == glfw.KEY_4 and action == glfw.PRESS:
@@ -97,7 +97,7 @@ class Hotkeys:
             else:
                 self.nn_model.stop_inference()
                 self.nn_plot.lines[0].stop()
-            print("5: NN_INFERENCE " + str(self.NN_INFERENCE))
+            print("4: NN_INFERENCE " + str(self.NN_INFERENCE))
 
         if key == glfw.KEY_5 and action == glfw.PRESS:
             self.NN_TRAINING = not self.NN_TRAINING
@@ -105,7 +105,7 @@ class Hotkeys:
                 self.nn_model.start_training()
             else:
                 self.nn_model.stop_training()
-            print("6: NN_TRAINING " + str(self.NN_TRAINING))
+            print("5: NN_TRAINING " + str(self.NN_TRAINING))
 
 
 
