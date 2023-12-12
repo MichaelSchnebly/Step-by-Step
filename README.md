@@ -1,7 +1,7 @@
 # Step-by-Step: Training IMU-based Gestures with Live Feedback
 ![Demo Animation](docs/figures/realtime_training.gif)
 
-Step-by-Step is a software tool that allows users to train gesture recognition models on intertial measurement unit (IMU) data with live audiovisual feedback on the neural network's performance as it learns. Step-by-Step is designed to be accessible to users with no machine learning experience while providing a powerful codebase for advanced users. 
+Step-by-Step is a software tool that allows users to train gesture recognition models on inertial measurement unit (IMU) data with live audiovisual feedback on the neural network's performance as it learns. Step-by-Step is designed to be accessible to users with no machine learning experience while providing a powerful codebase for advanced users. 
 
 The `README` is dedicated to illustrating the basic functions and getting users started. For more system details, please refer to the paper in the `docs` directory or review the code in detail.
 
@@ -10,10 +10,8 @@ The `README` is dedicated to illustrating the basic functions and getting users 
 
 ## Getting Started (Arduino)
 
-This Python application is set up to receive IMU data via USB connection to a microncontroller.
-
 ### Hardware 
-The hardware used in demonstrations was an Adafruit Feather Huzzah ESP8266 (microcontroller) connected via I2C to an Adafruit BNO-055 (IMU). To set one up yourself you just have to order those 2 components and solder 4 wires to 4 matching pins: 3v3, GND, SCL, and SDA.
+This Python application is set up to receive IMU data via USB connection to a microcontroller. Demonstrations used an Adafruit Feather Huzzah ESP8266 (microcontroller) connected via I2C to an Adafruit BNO-055 (IMU). To set one up yourself you just have to order those 2 components and solder 4 wires to 4 matching pins: 3v3, GND, SCL, and SDA.
 
 ### Software
 Assuming you are using the recommended hardware, the simplest way to install the example code on the microcontroller is to use the Arduino IDE. You'll need to download Adafruit's libraries for both the microcontroller and the IMU, then use the IDE to install the example script `arduino/imu.ino` onto the microcontorller. There are copious instructions on how to do all of this online.
