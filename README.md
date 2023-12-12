@@ -1,9 +1,9 @@
 # Step-by-Step: Training IMU-based Gestures with Live Feedback
+*Note: This `README` is dedicated to illustrating the basic functions and getting users started. For more complete system details, please refer to the paper in the `docs` directory or review the code in detail.*
+
 ![Demo Animation](docs/figures/realtime_training.gif)
 
-Step-by-Step is a software tool that allows users to train gesture recognition models on inertial measurement unit (IMU) data with live audiovisual feedback on the neural network's performance as it learns. Step-by-Step is designed to be accessible to users with no machine learning experience while providing a powerful codebase for advanced users. 
-
-The `README` is dedicated to illustrating the basic functions and getting users started. For more system details, please refer to the paper in the `docs` directory or review the code in detail.
+**Step-by-Step** is a software tool that allows users to train gesture recognition models on intertial measurement unit (IMU) data with live audiovisual feedback on the neural network's performance as it learns. Step-by-Step is designed to be accessible to users with no machine learning experience while providing a powerful codebase for advanced users. 
 
 ![Real-time Training](docs/figures/realtime_training.jpg)
 *Figure: Live Learning Feedback. The user performs a gesture and receives live feedback on the model’s performance. Bottom Panel: 10 seconds of training data. Acceleration components (x, y, z) are shown in color; magnitude is shown in grey. Each magnitude peak is marked by a thin vertical line, indicating it has been labelled as a gesture in the training data. Top Panel: 10 seconds of inference data. At t = 0 seconds the neural network is completely untrained. Naive to what is and is not a gesture, it predicts gesture and non-gesture with equal probability (0.5). As the model trains on non-gesture date, it begins to predict non-gesture with higher confidence. At t = 5 seconds, the model has converged on a solution that reliably distinguishes non-gestures. Upon seeing a gesture for the first time, the model is not able to recognize it. After a few demonstrations of the gesture, at t = 10 seconds the model has converged on a solution that reliably distinguishes gestures. Given more training data and time to learn, the model’s performance would continue to improve with gesture and non-gesture probabilities approaching 1 and 0, respectively.*
