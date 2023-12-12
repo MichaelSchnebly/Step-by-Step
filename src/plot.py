@@ -1,7 +1,4 @@
-import math
 import numpy as np
-import glm
-from scipy.spatial.transform import Rotation as R
 from OpenGL.arrays import vbo
 
 

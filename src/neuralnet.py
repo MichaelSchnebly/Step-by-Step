@@ -3,10 +3,7 @@ from keras.models import Model
 from keras.losses import CategoricalCrossentropy
 from keras.optimizers import Adam
 from keras.utils import plot_model
-# from sklearn.metrics import confusion_matrix
-import matplotlib.pyplot as plt
 import numpy as np
-# import coremltools as ct
 import time
 import threading
 

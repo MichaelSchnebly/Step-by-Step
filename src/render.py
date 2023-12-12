@@ -1,10 +1,5 @@
-import numpy as np
 from OpenGL.GL import *
-from OpenGL.GL.shaders import compileProgram, compileShader
-from OpenGL.arrays import vbo
-import glfw
-import glm
-import imgui
+from OpenGL.GL.shaders import compileProgram
 
 
 class EventRenderer:

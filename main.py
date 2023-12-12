@@ -1,9 +1,6 @@
 import glfw
 from OpenGL.GL import *
 
-import imgui
-from imgui.integrations.glfw import GlfwRenderer
-
 from src.imu import IMUData
 from src.stream import IMUStream
 from src.plot import IMUPlot, EventPlot, NNPlot
