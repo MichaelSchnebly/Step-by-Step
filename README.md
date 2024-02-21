@@ -3,8 +3,6 @@
 
 ![Demo Animation](docs/figures/realtime_training.gif)
 
-*Note: This .gif is flipped left-right relative to the figure below*
-
 **Step-by-Step** is a software tool that allows users to train gesture recognition models on intertial measurement unit (IMU) data with live audiovisual feedback on the neural network's performance as it learns. Step-by-Step is designed to be accessible to users with no machine learning experience while providing a powerful codebase for advanced users. 
 
 ![Real-time Training](docs/figures/realtime_training.jpg)
