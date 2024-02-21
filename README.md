@@ -32,7 +32,7 @@ Make sure you have the following prerequisites installed on your system:
 1. Clone the repository to your local machine:
 
     ```shell
-    git clone https://github.com/[INSERT USERNAME]/[INSERT REPOSITORY NAME].git
+    git clone https://github.com/[username]/[repository].git
     ```
 
 2. Navigate to the project directory:
