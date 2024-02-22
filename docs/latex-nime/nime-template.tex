@@ -7,6 +7,7 @@
 % Package that enables the use of accents and non 
 % standard characters
 \usepackage[utf8]{inputenc}
+\usepackage{hyperref}
 
 \begin{document}
 
@@ -31,7 +32,10 @@
 
 \maketitle
 \begin{abstract}
-This document serves as an application to NIME's 2024 Student Consortium. Within it, I present my interest in joining the NIME research community, as well as my preliminary results for \textit{Step-by-Step}, a software tool that allows users to train gesture recognition models with live audiovisual feedback. \textit{Step-by-Step} uses a simple neural network to learn to recognize and distinguish multiple gestures in inertial measurement unit (IMU) timeseries data. Users train the model by repeatedly performing a target gesture while receiving live feedback on the model’s ability to recognize that gesture. Once satisfactory results are achieved, the user can save the model and deploy it for realtime musical applications, as demonstrated in supplementary live performance videos. An anonymized code repository is available at \url{https://anonymous.4open.science/r/step-by-step-7506/}
+This document serves as an application to NIME's 2024 Student Consortium. Within it, I present my interest in joining the NIME research community, as well as my preliminary results for \textit{Step-by-Step}, a software tool that allows users to train gesture recognition models with live audiovisual feedback. \textit{Step-by-Step} uses a simple neural network to learn to recognize and distinguish multiple gestures in inertial measurement unit (IMU) timeseries data. Users train the model by repeatedly performing a target gesture while receiving live feedback on the model’s ability to recognize that gesture. Once satisfactory results are achieved, the user can save the model and deploy it for realtime musical applications. The training process is demonstrated in a supplementary video and an anonymized code repository is available at: \href{https://anonymous.4open.science/r/step-by-step-61D8/}{\textbf{https://anonymous.4open.science/r/step-by-step-61D8/}}
+
+
+
 \end{abstract} 
 \keywords{Gesture Recognition, IMU, Real-time, Neural Network, Training, Inference, Live Feedback}
 \ccsdesc[300]{Applied computing~Sound and music computing}
@@ -41,31 +45,29 @@ This document serves as an application to NIME's 2024 Student Consortium. Within
 % this line creates the CCS Concepts section.
 \printccsdesc
 
-\section{Expected Outcomes}
-
 \section{Introduction}
 The broad range of possible mappings between body movement and sound afforded by gesture-based digital musical instruments presents the musician with a creative challenge: Which body movements? Which sounds? And, what is the mapping between them \cite{mitchell:mapping}?
 
-A common approach to this challenge are \textit{learned} mappings, for which the musician records themselves demonstrating a gesture, then trains a machine learning model to recognize and distinguish the target gesture from other body movements. Indeed, the NIME community has produced several software tools that facilitate this process \cite{bullock:mllib,fiebrink:wekinator, gillian:toolkit, caramiaux:nimeml, mcpherson:pipeline}.
+A common approach to this challenge are \textit{learned} mappings, for which the musician records themselves demonstrating a gesture, then trains a machine learning model to recognize and distinguish the target gesture from other body movements. Indeed, the NIME community has prod-\\\\-uced a number of software tools that facilitate this process \cite{bullock:mllib,fiebrink:wekinator, gillian:toolkit, caramiaux:nimeml, mcpherson:pipeline}.
 
-These interactive machine learning tools are typically designed for offline training, wherein the musician records training data, trains the model, then tests it. With no knowledge of how the model will perform until after training, the musician must iterate, repeatedly recording, training, and testing until a satisfactory result is achieved. This opaque, iterative process can be a hindrance to creative flow, especially in live performance settings where improvising novel gesture-sound mappings might be desirable.
+These interactive machine learning tools are typically designed for offline training, wherein the musician records training data, trains the model, then tests it. With no knowledge of how the model will perform until after training, the musician must iterate, repeatedly recording, training, and testing until a satisfactory result is achieved. This iterative process with delayed feedback can be a hindrance to creative flow, especially in live performance settings where improvising novel gesture-sound mappings might be desirable.
 
-Ideally, one would be able to train a model in realtime, receiving live feedback on the model's performance as it learns each time a gesture is performed. Receving model performance reports on a per-gesture basis, the musician can build intuition for what the model has learned (e.g. which variations on the gesture are recognized and whicvh are not), adjust their gesture demonstrations accordingly, and arrive at a satisfactory result more efficiently.
+Ideally, one would be able to train a model in realtime, receiving live feedback on the model's performance as it learns each time a gesture is performed. Receving model performance reports on a per-gesture basis, the musician can build intuition for what the model has learned (e.g. which variations on the gesture are recognized and which are not), adjust their gesture demonstrations accordingly, and arrive at a satisfactory result more efficiently.
 
 This is the motivation behind \textit{Step-by-Step}, a software tool that allows users to train gesture recognition models with live audiovisual feedback. Here we present the system's hardware and software components, the method by which they are integrated, and preliminary results demonstrating the system's ability to learn to recognize and distinguish gestures in realtime.
 
 \section{Background}
 \subsection{Gesture Recognition}
-Gesture recognition is the process of recognizing and distinguishing gestures in data. Gestures are body movement patterns that convey information. In the context of digital musical instruments, gestures are often used to control sound. For example, a musician might use a gesture to control the pitch of a note, the volume of a sound, or the timbre of an instrument.
+Gestures are body movement patterns that convey information. Gesture recognition is the process of recognizing and distinguishing gestures in data. In the context of digital musical instruments, gestures are often used to control sound. For example, a musician might use a gesture to control the pitch of a note, the volume of a sound, or the timbre of an instrument.
 
 \subsection{Inertial Measurement Units}
-Inertial measurement units (IMUs) are one of many types types of sensors that can be used to measure body movement. IMUs typically include an accelerometer, gyroscope, and magnetometer, each of which measures in three axes: x, y, and z. IMUs are commonly used in wearable devices to track body movements over time. In this work, we use IMUs to measure body movement and recognize gestures.
+Inertial measurement units (IMUs) are one of many types types of sensors that can be used to measure body movement. IMUs typically include an accelerometer, gyroscope, and magnetometer, each of which measures in three axes: x, y, and z. IMUs are commonly used in wearable devices to track body movements over time. In this work, we use IMUs to measure body movement and recognize gestures.\\\\
 
 \subsection{Neural Networks}
-Neural networks are one of many classes of machine learning models that can be used to analyze IMU timeseries and identify patterns such as gestures. In \textit{supervised learning}, neural networks are trained by providing them with examples of inputs and corresponding correct output labels. During training, the model adjusts its parameters to minimize the difference between its predictions and the groundtruth outputs. This process is called gradient descent and is performed iteratively until the model converges on a solution. Once trained, the model can be used to make predictions on novel inputs. Here, we perform gradient descent in parallel to the recording and automated labelling of training data, allowing the model to learn in real-time as new examples are provided.
+Neural networks are one of many classes of machine learning models that can be used to analyze IMU timeseries and identify patterns such as gestures. In \textit{supervised learning}, neural networks are trained on example inputs paired with corresponding outputs. During training, the model adjusts its parameters to minimize the difference between its predictions about what the outputs should be and the groundtruth outputs it was provided with. This process is called gradient descent and is performed iteratively until the model converges on a solution. Once trained, the model can be used to make predictions on novel inputs. Here, we perform gradient descent in parallel to the recording and automated labelling of training data, allowing the model to learn in real-time as new examples are provided.
 
 \section{Method}
-The system consists of hardware and software components. The hardware measures body movement and streams the data to a computer. The software processes the data, trains a neural network, and provides live feedback to the user. The system is designed to be accessible to users with no machine learning experience while providing a powerful codebase for advanced users.
+The system consists of hardware and software components. The hardware measures body movement and streams the data to a computer. The software processes the data, trains a neural network, and provides live feedback to the user. 
 
 \subsection{Hardware}
 For measuring body movement, we used the Bosch BNO-055, a 9-axis IMU that includes an accelerometer, gyroscope, and magnetometer. The IMU uses I2C communication protocol to stream data to a microcontroller (Espressif ESP8266) which passes that data on to a laptop  (Macbook Pro 2017) via USB for further processing.
@@ -92,13 +94,13 @@ To facilitate realtime training and inference, the software is structured as a p
 The IMU data is collected as a timeseries of frames. Each frame is a 3D vector representing linear acceleration in each of the three axes: x, y, and z. The data is collected at a rate of 100 Hz and can be streamed directly from an IMU, recorded to a file, or loaded from a file.
 
 \subsubsection{Labelling}
-The data is labelled by associating each frame with a gesture. A gesture is a sequence of frames that represents a single movement of the body. Here, we focus on percussive gestures and assume that a gesture is complete at the local peak in linear acceleration's magnitude. This constraint allow us to achieve realtime, automated labelling of gestures using a simple peak-detection algorithm. When a local peak meet's user-defined criteria (e.g. acceleration is above a certain threshold), the peak frame is labelled as containing a gesture. All other frames are labelled as containing no gesture.
+The data is labelled by associating each frame with a gesture. A gesture is a sequence of frames that represents a single movement of the body. Here, we focus on percussive gestures and assume that a gesture is complete at the local peak in linear acceleration's magnitude. This constraint allow us to achieve realtime, automated labelling of gestures using a simple peak-detection algorithm. When a local peak meet's user-defined criteria (e.g. acceleration is above a certain threshold), the peak frame is labelled as containing the current target gesture. All other frames are labelled as containing no gesture.
 
 
 \begin{figure*}[h]
     \centering
-    \includegraphics[width=1.0\textwidth]{../figures/realtime_training.jpg}
-    \caption{Live Learning Feedback: The user performs a gesture and receives live feedback on the model's performance. Bottom Panel: 10 seconds of training data. Acceleration components (x, y, z) are shown in color; magnitude is shown in grey. Each magnitude peak is marked by a thin vertical line, indicating it has been labelled as a gesture in the training data. Top Panel: 10 seconds of inference data. At t = 0 seconds the neural network is completely untrained. Naive to what is and is not a gesture, it predicts gesture and non-gesture with equal probability (0.5). As the model trains on non-gesture date, it begins to predict non-gesture with higher probability. At t = 5 seconds, the model has converged on a solution that reliably distinguishes non-gesture. At t = 10 seconds, the model has converged on a solution that reliably distinguishes gestures. Given more training data and time to learn, the model's performance would continue to improve with gessture and non-gesture probabilities approaching 1 and 0, respectively. See supplementary video for live demo in the github repo.}
+    \includegraphics[width=0.98\textwidth]{../figures/realtime_training.jpg}
+    \caption{Live Learning Feedback: The user performs a gesture and receives live feedback on the model's performance. Bottom Panel: 10 seconds of training data. Acceleration components (x, y, z) are shown in color; magnitude is shown in grey. Each magnitude peak is marked by a thin vertical line, indicating it has been automatically recognized and labelled as a gesture in the training data. Top Panel: 10 seconds of inference data. At t = 0 seconds the neural network is completely untrained. Naive to what is and is not a gesture, it predicts gesture and non-gesture with equal probability (0.5). As the model trains on non-gesture data, it begins to predict non-gesture with higher probability. At t = 5 seconds, the model has converged on a solution that reliably distinguishes non-gesture. At t = 10 seconds, the model has converged on a solution that reliably distinguishes gestures. Given more training data and time to learn, the model's performance with continue to improve with gessture and non-gesture probabilities approaching 1 and 0 respectively. The model then can be trained to distinguish additional unique gestures (at least 4 in the author's experience). See supplementary videos for demonstrations.}
     \label{fig:realtime_training}
 \end{figure*}
 
@@ -106,10 +108,10 @@ The data is labelled by associating each frame with a gesture. A gesture is a se
 \subsubsection{Structure}
 The neural network is a shallow, two-branched model. One branch represents a recent history of sensor values while the other represents a recent history of model outputs. Combining the information from the these two sources, the model is trained to maximize the probability of the correct gesture and minimize the probabilities of all other gestures.
 
-The sensor branch consists of an input layer (short timeseries of recent sensor values) followed by a  a 1D convolutional layer (recognizes patterns in the timeseries). The memory branch consists of an input layer (short timeseries of recent model outputs) followed by a max pooling layer (summarizes the timeseries of recent model outputs based on its highest values). These branches are then concatenated and followed by a fully connected output layer. 
-% The model structure is shown in Figure \ref{fig:model_structure}.
+The sensor branch consists of an input layer (short timeseries of recent sensor values) followed by a  a 1D convolutional layer (recognizes patterns in the timeseries). The memory branch consists of an input layer (short timeseries of recent model output values) followed by a max pooling layer (summarizes the timeseries of recent model outputs based on its highest values). These branches are then concatenated and followed by a fully connected output layer. Model architecture is shown in Figure \ref{fig:neural_network}.
 
-
+Depending on the context, the memory branch may not be necessary. In the context of percussive gestures, the authors have found that this self-reference helps the model to learn that gestures typically do not occur in rapid succession.
+% The model structure is shown in Figure \ref{fig:neural_network}.
 
 
 \subsubsection{Realtime Training}
@@ -117,7 +119,7 @@ Training is performed using Tensorflow's default gradient descent optimizer. The
 
 The window slides forward one frame at a time. If the most recent frame in a window is labelled with a gesture, the window is labelled with that gesture. Otherwise, the window is labelled with no gesture. As new windows are collected, the model is trained on the windows using gradient descent. Training is iterative and the model's training data is updated in realtime, allowing the user to receive live feedback on the model's performance. This process is illustated in Figure \ref{fig:realtime_training}.
 
-In principle this training could be done stochastically, training on each frame's window as it is collected. However, this would  would require a more sophisticated training algorithm that Tensorflow's built-in gradient descent optimizer (at least given the computational performance of the author's machine). For this reason, this proof-of-concept codebase defaults to training on batches of recent windows. When training completes, the model is updated, the training data is updated with recent frames, and training begins again.
+In principle this training could be done stochastically, training on each frame's window as it is collected. However, this would require a more sophisticated training algorithm than Tensorflow's built-in gradient descent optimizer (at least given the computational performance of the author's machine). For this reason, this proof-of-concept codebase defaults to training on batches of recent windows. When training completes, the model is updated, the training data is updated with recent frames, and training begins again.
 
 \subsubsection{Realtime Inference}
 As the model is updated, its performance is tested on the most recent frames using Tensorflow. Ideally, this would be done on a frame-by-frame basis, but computational constraints required the authors to batch the frames and perform inference on batches.
@@ -143,10 +145,15 @@ The current user interface is a simple OpenGL-based GUI that displays the IMU ti
 
 
 \section{Conclusion}
-Step-by-Step serves as a proof-of-concept for realtime learning of user-defined gestures in IMU data. It is worth noting that the strategies employed here are not limited to IMU data and could be applied to data from other sensors. The authors hope that this work will inspire others to explore the possibilities of realtime machine learning in human-computer interaction.
+Step-by-Step serves as a proof-of-concept for realtime learning of user-defined gestures in IMU data. While currently limitted to percussive gestures (MIDI note on/off), a similar scheme could be used to do realtime learning of continuous mappings (MIDI CC messages) as well. It is worth noting that the strategies employed here are not limited to IMU data and could be applied to data from other sensors.
 
 
+\section{Expected Outcomes}
+In applying for the NIME 2024 Student Consortium, I hope to demo \textit{Step-by-Step} as a preliminary work, receive feedback from the NIME community, connect with other researchers, and experience NIME gesture-sound mapping demonstrations in-person (there is only so much one can glean from reading a paper). Given that NIME-related research is uncommon at my institution, the opportunity to connect with other researchers in the NIME community is particularly exciting. During background research for this submission, I discovered many NIME papers that are relevant to this work, and I am eager to connect with the authors of those papers and others who are interested in similar topics.
 
+
+\section{Supplementary Videos}
+\textit{Please find supplementary videos in the supplementary materials section of the conference application.}
 
 
 % The following two commands are all you need in the

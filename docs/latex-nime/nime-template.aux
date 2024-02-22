@@ -1,4 +1,18 @@
 \relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
 \citation{mitchell:mapping}
 \citation{bullock:mllib}
 \citation{fiebrink:wekinator}
@@ -61,28 +75,26 @@
 \pgfsyspdfmark {pgfid54}{14576242}{42992409}
 \pgfsyspdfmark {pgfid55}{24483215}{42992409}
 \pgfsyspdfmark {pgfid56}{24483215}{42992409}
-\newlabel{key}{{}{\thepage }}
-\@writefile{toc}{\contentsline {section}{\numberline {1}Expected Outcomes}{\thepage }{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2}Introduction}{\thepage }{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3}Background}{\thepage }{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Gesture Recognition}{\thepage }{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Inertial Measurement Units}{\thepage }{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Neural Networks}{\thepage }{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4}Method}{\thepage }{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Hardware}{\thepage }{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Software}{\thepage }{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Data Processing}{\thepage }{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.1}Collection}{\thepage }{}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Neural Network Architecture. The sensor branch (left) receives 20 frames (200 ms at 100 Hz) of 3-channel (x, y, z) IMU data. The sensor branch feeds into a 1D-convolutional layer with 8 filters, each also 20 frames in width. The memory branch (right) receives 15 frames of 1-hot encoded prediction data. The two branches are concatenated and fed into a fully connected output layer to predict the currently active gesture.}}{\thepage }{}\protected@file@percent }
-\newlabel{fig:neural_network}{{1}{\thepage }}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.2}Labelling}{\thepage }{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Neural Network}{\thepage }{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.4.1}Structure}{\thepage }{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.4.2}Realtime Training}{\thepage }{}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Live Learning Feedback: The user performs a gesture and receives live feedback on the model's performance. Bottom Panel: 10 seconds of training data. Acceleration components (x, y, z) are shown in color; magnitude is shown in grey. Each magnitude peak is marked by a thin vertical line, indicating it has been labelled as a gesture in the training data. Top Panel: 10 seconds of inference data. At t = 0 seconds the neural network is completely untrained. Naive to what is and is not a gesture, it predicts gesture and non-gesture with equal probability (0.5). As the model trains on non-gesture date, it begins to predict non-gesture with higher probability. At t = 5 seconds, the model has converged on a solution that reliably distinguishes non-gesture. At t = 10 seconds, the model has converged on a solution that reliably distinguishes gestures. Given more training data and time to learn, the model's performance would continue to improve with gessture and non-gesture probabilities approaching 1 and 0, respectively. See supplementary video for live demo in the github repo.}}{\thepage }{}\protected@file@percent }
-\newlabel{fig:realtime_training}{{2}{\thepage }}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.4.3}Realtime Inference}{\thepage }{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}User Interface and Control}{\thepage }{}\protected@file@percent }
+\newlabel{key}{{}{\thepage }{}{Doc-Start}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{\thepage }{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Background}{\thepage }{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Gesture Recognition}{\thepage }{subsection.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Inertial Measurement Units}{\thepage }{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Neural Networks}{\thepage }{subsection.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Method}{\thepage }{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Hardware}{\thepage }{subsection.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Software}{\thepage }{subsection.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Data Processing}{\thepage }{subsection.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.1}Collection}{\thepage }{subsubsection.3.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.2}Labelling}{\thepage }{subsubsection.3.3.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Neural Network Architecture. The sensor branch (left) receives 20 frames (200 ms at 100 Hz) of 3-channel (x, y, z) IMU data. The sensor branch feeds into a 1D-convolutional layer with 8 filters, each also 20 frames in width. The memory branch (right) receives 15 frames of 1-hot encoded prediction data. The two branches are concatenated and fed into a fully connected output layer to predict the currently active gesture.}}{\thepage }{figure.1}\protected@file@percent }
+\newlabel{fig:neural_network}{{1}{\thepage }{Neural Network Architecture. The sensor branch (left) receives 20 frames (200 ms at 100 Hz) of 3-channel (x, y, z) IMU data. The sensor branch feeds into a 1D-convolutional layer with 8 filters, each also 20 frames in width. The memory branch (right) receives 15 frames of 1-hot encoded prediction data. The two branches are concatenated and fed into a fully connected output layer to predict the currently active gesture}{figure.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Neural Network}{\thepage }{subsection.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.4.1}Structure}{\thepage }{subsubsection.3.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.4.2}Realtime Training}{\thepage }{subsubsection.3.4.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Live Learning Feedback: The user performs a gesture and receives live feedback on the model's performance. Bottom Panel: 10 seconds of training data. Acceleration components (x, y, z) are shown in color; magnitude is shown in grey. Each magnitude peak is marked by a thin vertical line, indicating it has been automatically recognized and labelled as a gesture in the training data. Top Panel: 10 seconds of inference data. At t = 0 seconds the neural network is completely untrained. Naive to what is and is not a gesture, it predicts gesture and non-gesture with equal probability (0.5). As the model trains on non-gesture data, it begins to predict non-gesture with higher probability. At t = 5 seconds, the model has converged on a solution that reliably distinguishes non-gesture. At t = 10 seconds, the model has converged on a solution that reliably distinguishes gestures. Given more training data and time to learn, the model's performance with continue to improve with gessture and non-gesture probabilities approaching 1 and 0 respectively. The model then can be trained to distinguish additional unique gestures (at least 4 in the author's experience). See supplementary videos for demonstrations.}}{\thepage }{figure.2}\protected@file@percent }
+\newlabel{fig:realtime_training}{{2}{\thepage }{Live Learning Feedback: The user performs a gesture and receives live feedback on the model's performance. Bottom Panel: 10 seconds of training data. Acceleration components (x, y, z) are shown in color; magnitude is shown in grey. Each magnitude peak is marked by a thin vertical line, indicating it has been automatically recognized and labelled as a gesture in the training data. Top Panel: 10 seconds of inference data. At t = 0 seconds the neural network is completely untrained. Naive to what is and is not a gesture, it predicts gesture and non-gesture with equal probability (0.5). As the model trains on non-gesture data, it begins to predict non-gesture with higher probability. At t = 5 seconds, the model has converged on a solution that reliably distinguishes non-gesture. At t = 10 seconds, the model has converged on a solution that reliably distinguishes gestures. Given more training data and time to learn, the model's performance with continue to improve with gessture and non-gesture probabilities approaching 1 and 0 respectively. The model then can be trained to distinguish additional unique gestures (at least 4 in the author's experience). See supplementary videos for demonstrations}{figure.2}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.4.3}Realtime Inference}{\thepage }{subsubsection.3.4.3}\protected@file@percent }
 \bibstyle{abbrv}
 \bibdata{nime-references}
 \bibcite{mitchell:mapping}{1}
@@ -91,8 +103,11 @@
 \bibcite{gillian:toolkit}{4}
 \bibcite{caramiaux:nimeml}{5}
 \bibcite{mcpherson:pipeline}{6}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Results}{\thepage }{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6}Next Steps}{\thepage }{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{\thepage }{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {8}References}{\thepage }{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}User Interface and Control}{\thepage }{subsection.3.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Results}{\thepage }{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Next Steps}{\thepage }{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusion}{\thepage }{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Expected Outcomes}{\thepage }{section.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}Supplementary Videos}{\thepage }{section.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {9}References}{\thepage }{section.9}\protected@file@percent }
 \gdef \@abspage@last{4}
