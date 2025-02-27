@@ -1,5 +1,5 @@
 # Step-by-Step: Training IMU-based Gestures with Live Feedback
-*Note: This `README` is dedicated to illustrating the basic functions and getting users started. For more complete system details, please refer to the paper in the `docs` directory or review the code in detail.*
+*Note: This `README` is dedicated to illustrating the basic functions and getting users started. For a guided video, see `media/demo.mp4`. For more complete system details, please refer to the paper in the `docs` directory or review the code in detail.*
 
 ![Demo Animation](docs/figures/realtime_training.gif)
 
